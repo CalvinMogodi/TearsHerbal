@@ -1,28 +1,42 @@
-
 <ion-header>
-
-  <ion-navbar>
-      <ion-title style="text-align:center">
-          <img width="50" height="50" src="../assets/imgs/Teras_Herbal_Juice_Logo.png">
-      </ion-title>
+  <ion-navbar hideBackButton="true">
+    <ion-title style="text-align:center">
+      <img width="50" height="50" src="../assets/imgs/Teras_Herbal_Juice_Logo.png">
+    </ion-title>
   </ion-navbar>
 
 </ion-header>
-
-
-<ion-content padding>
-    <ion-list>
-    <ion-item>
-      <ion-label floating>Email</ion-label>
-      <ion-input type="text"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label floating>Password</ion-label>
-      <ion-input type="password"></ion-input>
-    </ion-item>
-</ion-list>
-<button color="secondary" ion-button full>Sign In</button>
-  <p style="text-align: center">&#169;Copyright. All rights reserved</p>
-  <p style="text-align: center;color:blue"><button ion-button click='goToSignUp();'>Create Account</button></p>
+<ion-content padding text-center class="login-background">
+  <ion-card class="login-card">
+    <form [formGroup]="loginForm">
+      <ion-list padding>
+        <ion-item>
+          <ion-label floating>Email</ion-label>
+          <ion-input [(ngModel)]="user.email" formControlName="email" [class.invalid]="!loginForm.controls.email.valid && (loginForm.controls.email.dirty || submitAttempt)"
+            type="email"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>Password</ion-label>
+          <ion-input [(ngModel)]="user.password" formControlName="password" [class.invalid]="!loginForm.controls.password.valid && (loginForm.controls.password.dirty || submitAttempt)"
+            type="password"></ion-input>
+        </ion-item>
+      </ion-list>
+      <div padding>
+        <button ion-button block class="login-btn" (click)="signIn()">Sign In</button>
+        <p *ngIf="showError" style="color: red;font-size: xx-small"> invalid email or password. </p>
+      </div>
+      <ion-row style="margin-top: -20px;">
+        <ion-col>
+          <button (click)="register()" ion-button icon-left clear small class="login-links">
+        <div>Register</div>
+      </button>
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left clear small class="login-links" (click)="forgotPassword()">
+        <div>Forgot Password?</div>
+      </button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-card>
 </ion-content>

@@ -1,0 +1,91 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Register
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding class="background">
+    <ion-card *ngIf="step == 1">
+        <form [formGroup]="signUpFirstForm">
+            <ion-list>
+                <ion-item>
+                    <ion-label floating>Name</ion-label>
+                    <ion-input [(ngModel)]="account.name" formControlName="name" [class.invalid]="!signUpFirstForm.controls.name.valid && (signUpFirstForm.controls.name.dirty || submitAttempt)"
+                        type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Surname</ion-label>
+                    <ion-input [(ngModel)]="account.surname" formControlName="surname" [class.invalid]="!signUpFirstForm.controls.surname.valid && (signUpFirstForm.controls.surname.dirty || submitAttempt)"
+                        type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Cell Phone</ion-label>
+                    <ion-input [(ngModel)]="account.cellPhone" formControlName="cellPhone" [class.invalid]="!signUpFirstForm.controls.cellPhone.valid && (signUpFirstForm.controls.cellPhone.dirty || submitAttempt)"
+                        type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Email</ion-label>
+                    <ion-input [(ngModel)]="account.email" formControlName="email" [class.invalid]="!signUpFirstForm.controls.email.valid && (signUpFirstForm.controls.email.dirty || submitAttempt)"
+                        type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Password</ion-label>
+                    <ion-input [(ngModel)]="account.password" formControlName="password" [class.invalid]="!signUpFirstForm.controls.password.valid && (signUpFirstForm.controls.password.dirty || submitAttempt)"
+                        type="password"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Confirm Password</ion-label>
+                    <ion-input [(ngModel)]="account.confirmPassword" formControlName="confirmPassword" [class.invalid]="!signUpFirstForm.controls.confirmPassword.valid && (signUpFirstForm.controls.confirmPassword.dirty || submitAttempt)"
+                        type="password"></ion-input>
+                </ion-item>
+                <div padding>
+                    <button ion-button block class="btn" (click)="next()">Next</button>
+                </div>
+            </ion-list>
+        </form>
+    </ion-card>
+
+    <ion-card *ngIf="step == 2">
+        <form [formGroup]="signUpSecondForm">
+            <ion-list>
+                <ion-item>
+                    <div style="text-align:-webkit-center !important;">
+                        <img *ngIf="selectImagePath" [(src)]="selectImagePath" style="width: 50px;height: 50px;">
+                    </div>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Referred By</ion-label>
+                    <ion-input [(ngModel)]="account.referredBy" formControlName="referredBy" [class.invalid]="!signUpSecondForm.controls.referredBy.valid && (signUpSecondForm.controls.referredBy.dirty || secondSubmitAttempt)" type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Address</ion-label>
+                    <ion-input [(ngModel)]="account.address" formControlName="address" [class.invalid]="!signUpSecondForm.controls.address.valid && (signUpSecondForm.controls.address.dirty || secondSubmitAttempt)" type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>ID Number</ion-label>
+                    <ion-input [(ngModel)]="account.IDNumber" formControlName="IDNumber" [class.invalid]="!signUpSecondForm.controls.IDNumber.valid && (signUpSecondForm.controls.IDNumber.dirty || secondSubmitAttempt)" type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Bank Name</ion-label>
+                    <ion-input [(ngModel)]="account.bankName" formControlName="bankName" [class.invalid]="!signUpSecondForm.controls.bankName.valid && (signUpSecondForm.controls.bankName.dirty || secondSubmitAttempt)" type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Account Number</ion-label>
+                    <ion-input [(ngModel)]="account.accountNumber" formControlName="accountNumber" [class.invalid]="!signUpSecondForm.controls.accountNumber.valid && (signUpSecondForm.controls.accountNumber.dirty || secondSubmitAttempt)" type="text"></ion-input>
+                </ion-item>
+                <div padding>
+                    <button ion-button block class="btn" (click)="signUp()">Sign Up</button>
+                     <p *ngIf="showError" style="color: red;font-size: xx-small"> {{message}} </p>
+                </div>
+                <div padding>
+                    <button ion-button icon-left clear small block class="login-links" (click)="back()">Previous</button>
+                </div>
+            </ion-list>
+        </form>
+    </ion-card>
+</ion-content>
+<ion-footer>
+    <p style="text-align: center">&#169;Copyright. All rights reserved</p>
+</ion-footer>

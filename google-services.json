@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "303502211142",
+    "firebase_url": "https://terasherbal-7694e.firebaseio.com",
+    "project_id": "terasherbal-7694e",
+    "storage_bucket": "terasherbal-7694e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:303502211142:android:16f366e4fb3ddf1a",
+        "android_client_info": {
+          "package_name": "io.ionic.TerasHerbal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "303502211142-7f7op268ek329hhnq1vugd1v9mehfisr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3VERUH9XolbSI_7P3NGsVUNBVNSSdLHs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,32 +1,23 @@
-page-login {
-    .login-background{
+ page-register {
+     .background{
     background-image: url(/assets/imgs/login-bg.jpg);
     height: 100%;
     width: 100%;
     background-position: center;
     position: fixed;
     background-size: cover;
-}
-.login-card{
-    margin-top: 40%;
-    color: #fff;    background-image: url(/assets/img/bg-strips-light.jpg);
-    background-repeat: repeat;
-}
-.login-btn{
+    }
+    .btn{
     color: #FFFFFF;
     background-image: none;
     background-color: #32CD32;
     border-color: #008000;
 }
-.login-links{
-    font-size: smaller;
-    font-weight: normal;
-}
 
- .invalid {
+.invalid {
      border-bottom: 1px solid #ea6153;
      }
 ion-input {
     border-bottom: 1px solid  #008000;
     }
-}
+ }
