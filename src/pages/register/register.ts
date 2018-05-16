@@ -89,6 +89,12 @@ export class RegisterPage {
 
             this.userService.signUpUser(this.account).then(authData => {
                 loader.dismiss();
+                let toast = this.toastCtrl.create({
+                    message: 'You have signed up successful.',
+                    duration: 2000,
+                    position: 'bottom'
+                });
+                toast.present(toast);
                 this.navCtrl.push(LoginPage);
             }, error => {
                 loader.dismiss();
