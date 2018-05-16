@@ -8,7 +8,8 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController)
+  {
 
   }
 

@@ -18,6 +18,14 @@ export class RegisterPage {
     secondSubmitAttempt: boolean = false;
     showError: boolean = false;
     message: string;
+    peoples =
+    [
+      {
+        name: "Themba",
+        IDNumber: "9502015260082"
+      }
+    ];
+
     public account = {
         name: '',
         surname: '',
@@ -71,7 +79,8 @@ export class RegisterPage {
           this.showError = false;
          this.message = '';
         this.secondSubmitAttempt = true;
-        if (this.signUpSecondForm.valid) {
+        if(true){
+        //if (this.signUpSecondForm.valid) {
             var loader = this.loadingCtrl.create({
                 content: "Please wait..."
             });
