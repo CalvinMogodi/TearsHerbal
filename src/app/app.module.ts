@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpModule } from '@angular/http';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
@@ -12,6 +12,8 @@ import { ListPage } from '../pages/list/list';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 import { UploadPage } from '../pages/upload/upload';
+import { OrderPage } from '../pages/order/order';
+import { CartPage } from '../pages/cart/cart';
 
 import * as firebase from 'firebase'
 import { StatusBar } from '@ionic-native/status-bar';
@@ -38,6 +40,8 @@ firebase.initializeApp(firebaseConfig);
     ListPage,
     RegisterPage,
     UploadPage,
+    OrderPage,
+    CartPage
   ],
   imports: [
     BrowserModule,
@@ -45,17 +49,20 @@ firebase.initializeApp(firebaseConfig);
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot({
       name: '__mydb',
-         driverOrder: ['indexeddb', 'sqlite', 'websql']
+         driverOrder: ['sqlite', 'indexeddb', 'websql']
     })
   ],
   bootstrap: [IonicApp],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   entryComponents: [
     MyApp,
     LoginPage,
     HomePage,
     ListPage,
     RegisterPage,
-    UploadPage
+    UploadPage,
+    OrderPage,
+    CartPage
   ],
   providers: [
     StatusBar,

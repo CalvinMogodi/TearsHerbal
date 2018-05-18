@@ -1,3 +1,5 @@
+
+
 <ion-header>
   <ion-navbar>
     <button ion-button menuToggle>
@@ -14,11 +16,11 @@
             <ion-col s6>
                 <ion-card style="border-radius:5px;width:100%;height:100px">
                     <ion-card-header>
-                        
+
                     </ion-card-header>
                     <ion-card-content>
                         <ion-icon name="star" color="yellow" style="color:yellow"></ion-icon>
-                        1000 points <br> 
+                        1000 points <br>
                         <div style="text-align: center">
                             <button ion-button color="secondary" style="font-size: 5pt" round>view</button>
                         </div>
@@ -28,14 +30,14 @@
             <ion-col s6>
                 <ion-card style="border-radius:5px;width:100%;height:100px">
                     <ion-card-header>
-                        
+
                     </ion-card-header>
                     <ion-card-content>
                         <ion-icon name="basket" color="primary"></ion-icon>
-                        2000 orders <br> 
+                        {{numOfOrders}} orders <br>
                         <div style="text-align: center">
-                            <button ion-button color="secondary" style="font-size: 5pt" round>view</button>
-                        </div> 
+                            <button (click)="viewOrders()" ion-button color="secondary" style="font-size: 5pt" round>view</button>
+                        </div>
                     </ion-card-content>
                 </ion-card>
             </ion-col>
@@ -49,7 +51,7 @@
                                 <ion-row>
                                     <ion-col s6>
                                         <ion-icon name="people" color="primary"></ion-icon>
-                                        My people
+                                     My People
                                     </ion-col>
                                     <ion-col s6>
                                         <button ion-button color="secondary" style="font-size: 5pt;margin-top:-10px;width:100%" round>view</button>
@@ -59,10 +61,9 @@
                         </div>
                     </ion-card-header>
                     <ion-card-content>
-                        <ion-item-group>
-                            <ion-item-divider>Themba Mthokozisi Mbhele</ion-item-divider>
-                            <ion-item-divider>Gontse Mamabolo</ion-item-divider>
-                            <ion-item-divider>Boitumelo Matlala</ion-item-divider>
+                        <ion-spinner *ngIf="usersUnderMe.length <= 0"></ion-spinner>
+                        <ion-item-group *ngIf="usersUnderMe.length > 0">
+                            <ion-item-divider *ngFor="let people of usersUnderMe" [value]="people.name">{{people.name + " " + people.surname}}</ion-item-divider>
                         </ion-item-group>
                     </ion-card-content>
                 </ion-card>

@@ -52,13 +52,23 @@ export class LoginPage {
 
       this.userService.loginUser(this.user.email, this.user.password).then(authData => {
         //get data from db
-        var userId = this.database.ref().child('users').orderByChild('email').equalTo(this.user.email).once('value', (snapshot) =>{
+        this.database.ref('users/' + authData.uid).once('value', (snapshot) =>{
             //return snapshot.val() || 'Anoynymous';
-            var test = snapshot.val();
-            this.storage.set("id", test.isActive);
-
-            loader.dismiss();
-            this.navCtrl.setRoot(HomePage);
+            var user = snapshot.val();
+            this.storage.set("id", authData.uid);
+            this.userService.setUid(authData.uid);
+            
+            if(user.isActive == true)
+            {
+                loader.dismiss();
+                this.navCtrl.setRoot(HomePage, {
+                    userData: authData.uid
+                });
+            }
+            else
+            {
+                 loader.dismiss();
+            }
 
         });
 
