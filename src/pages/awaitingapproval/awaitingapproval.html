@@ -18,31 +18,15 @@
 </ion-header>
 
 <ion-content padding style="background-color: #edeaea">
-    <ion-card *ngIf="showUploadButton">
+    <ion-card >
         <ion-card-header style="font-family: 'Noto Sans', sans-serif">
-          Upload Proof of Payment
+          Awaiting Approval
         </ion-card-header>
         <ion-card-content>
           The British use the term "header", but the American term "head-shot" the English simply refuse to adopt.
           <br><br>
           The British use the term "header", but the American term "head-shot" the English simply refuse to adopt.
           <br><br>
-          <button ion-button color="secondary" style="width:100%" round (click)="listDirectories()">browse</button>
         </ion-card-content>
-    </ion-card>
-    <ion-card *ngIf="!showUploadButton">
-        <ion-card-header style="font-family: 'Noto Sans', sans-serif">
-            <ion-icon name="folder" style="color:#14bf14"></ion-icon>&nbsp;Documents
-        </ion-card-header>
-        <ion-card-content>
-             <div *ngFor="let file of files">
-                <div (click)="uploadDocument()">
-                    {{file.name}}
-                </div>
-               <!-- <div >
-                  File: {{file.name}}
-                </div> -->
-            </div>
-        </ion-card-content>
-    </ion-card>
+    </ion-card>    
 </ion-content>

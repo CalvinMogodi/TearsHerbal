@@ -14,6 +14,7 @@ import { RegisterPage } from '../pages/register/register';
 import { UploadPage } from '../pages/upload/upload';
 import { OrderPage } from '../pages/order/order';
 import { CartPage } from '../pages/cart/cart';
+import { AwaitingApprovalPage } from '../pages/awaitingapproval/awaitingapproval';
 
 import * as firebase from 'firebase'
 import { StatusBar } from '@ionic-native/status-bar';
@@ -41,7 +42,8 @@ firebase.initializeApp(firebaseConfig);
     RegisterPage,
     UploadPage,
     OrderPage,
-    CartPage
+    CartPage,
+    AwaitingApprovalPage
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,8 @@ firebase.initializeApp(firebaseConfig);
     RegisterPage,
     UploadPage,
     OrderPage,
-    CartPage
+    CartPage,
+    AwaitingApprovalPage
   ],
   providers: [
     StatusBar,
