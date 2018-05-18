@@ -15,6 +15,7 @@ export class UserserviceProvider {
   public data: any;
   public fireAuth: any;
   public userProfile: any;
+  public uid: any;
   constructor() {
     this.fireAuth = firebase.auth();
     this.userProfile = firebase.database().ref('users')
@@ -34,5 +35,15 @@ export class UserserviceProvider {
       });
     });
 
+  }
+  
+  setUid(uid)
+  {
+      this.uid = uid;
+  }
+  
+  getUid()
+  {
+      return this.uid;
   }
 }

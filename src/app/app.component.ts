@@ -13,7 +13,7 @@ import { LoginPage } from '../pages/login/login';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;
+  rootPage: any = LoginPage;
 
   pages: Array<{title: string, component: any}>;
   
@@ -22,7 +22,7 @@ export class MyApp {
     var that = this;
     firebase.auth().onAuthStateChanged(function(user){
       if(user){
-        that.rootPage = HomePage;
+        that.rootPage = LoginPage;
       }
       else{
         that.rootPage = LoginPage;

@@ -18,13 +18,9 @@ export class RegisterPage {
     secondSubmitAttempt: boolean = false;
     showError: boolean = false;
     message: string;
-    peoples =
-    [
-      {
-        name: "Themba",
-        IDNumber: "9502015260082"
-      }
-    ];
+    database: any;
+    
+    peoples = [];
 
     public account = {
         name: '',
@@ -44,7 +40,19 @@ export class RegisterPage {
     selectImagePath = 'assets/imgs/ic_person_black.png';
     public step = 1;
     constructor(public userService: UserserviceProvider, public navCtrl: NavController, public formBuilder: FormBuilder, public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
-        this.signUpFirstForm = formBuilder.group({
+            //get all users
+            this.database = firebase.database();
+            
+            this.database.ref().child('users').once('value', (snapshot)=>{
+                snapshot.forEach(snap=>
+                {
+                    var item = snap.val();
+                    item.key = snap.key;
+                    this.peoples.push(item);
+                });
+            });
+            
+            this.signUpFirstForm = formBuilder.group({
             email: ['', Validators.compose([Validators.required])],
             password: ['', Validators.compose([Validators.required])],
             name: ['', Validators.compose([Validators.required])],

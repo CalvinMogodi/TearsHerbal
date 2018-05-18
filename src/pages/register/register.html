@@ -58,7 +58,7 @@
                 <ion-item>
                   <ion-label>Referred By</ion-label>
                     <ion-select [(ngModel)]="account.referredBy" [ngModelOptions]="{standalone: true}" >
-                        <ion-option *ngFor="let people of peoples" [value]="people.IDNumber">{{people.name}}</ion-option>
+                        <ion-option *ngFor="let people of peoples" [value]="people.key">{{people.name}}</ion-option>
                     </ion-select>
                 </ion-item>
                 <!--<ion-item>
