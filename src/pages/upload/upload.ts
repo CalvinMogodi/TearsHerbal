@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 import { LoadingController } from 'ionic-angular';
+import { UserserviceProvider } from '../../providers/userservice/userservice';
 
 /**
  * Generated class for the UploadPage page.
@@ -17,7 +18,7 @@ import { LoadingController } from 'ionic-angular';
   templateUrl: 'upload.html',
 })
 export class UploadPage {
-
+ uid : any;
   files =
   [
       {
@@ -34,8 +35,9 @@ export class UploadPage {
   rootDirectory = 'file:///';
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              public fileNavigator: File, public loadingCtrl: LoadingController)
+              public fileNavigator: File, public loadingCtrl: LoadingController, public userService: UserserviceProvider)
   {
+    this.uid = navParams.get('userData');
 
   }
 
@@ -55,11 +57,15 @@ export class UploadPage {
     });
 
     loader.present();
-
-    setTimeout(() => {
+     this.userService.userHasUploadedPOP(this.uid).then(authData => {
+ setTimeout(() => {
       loader.dismiss();
       this.showUploadButton = true;
     }, 3000);
+     });
+   
+
+
   }
 
   ionViewDidLoad() {

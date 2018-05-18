@@ -67,7 +67,10 @@ export class LoginPage {
             }
             else
             {
-                 loader.dismiss();
+               loader.dismiss();
+               this.navCtrl.setRoot(UploadPage, {
+                    userData: authData.uid
+                });                
             }
 
         });

@@ -36,6 +36,12 @@ export class UserserviceProvider {
     });
 
   }
+
+  userHasUploadedPOP(key: string): any {
+    var updates = {};
+    updates['users/' + key + '/hasUploadedPOP'] = true;
+    return firebase.database().ref().update(updates);
+  }
   
   setUid(uid)
   {
