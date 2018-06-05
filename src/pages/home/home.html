@@ -20,7 +20,7 @@
                     </ion-card-header>
                     <ion-card-content>
                         <ion-icon name="star" color="yellow" style="color:yellow"></ion-icon>
-                        1000 points <br>
+                        {{points}} points <br>
                         <div style="text-align: center">
                             <button ion-button color="secondary" style="font-size: 5pt" round>view</button>
                         </div>
@@ -61,10 +61,11 @@
                         </div>
                     </ion-card-header>
                     <ion-card-content>
-                        <ion-spinner *ngIf="usersUnderMe.length <= 0"></ion-spinner>
+                        <ion-spinner *ngIf="usersUnderMe.length <= 0 && loading"></ion-spinner>
                         <ion-item-group *ngIf="usersUnderMe.length > 0">
                             <ion-item-divider *ngFor="let people of usersUnderMe" [value]="people.name">{{people.name + " " + people.surname}}</ion-item-divider>
                         </ion-item-group>
+                        <p *ngIf="usersUnderMe.length <= 0 && !loading">no users</p>
                     </ion-card-content>
                 </ion-card>
             </ion-col>

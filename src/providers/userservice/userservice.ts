@@ -41,9 +41,9 @@ export class UserserviceProvider {
   {
       this.uid = uid;
   }
-  
-  getUid()
-  {
+   
+  getUid() : any
+  { 
       return this.uid;
   }
 }

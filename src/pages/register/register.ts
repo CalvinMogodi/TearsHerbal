@@ -35,7 +35,9 @@ export class RegisterPage {
         profilePicture: '',
         IDNumber: '',
         bankName: '',
-        userType:'User'
+        userType:'User',
+        isActive: false,
+        points: 0
     }
     selectImagePath = 'assets/imgs/ic_person_black.png';
     public step = 1;

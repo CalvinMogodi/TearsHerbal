@@ -6,6 +6,7 @@ import { UploadPage } from '../upload/upload';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Storage } from '@ionic/storage';
+import { Http } from '@angular/http';
 import * as firebase from 'firebase'
 
 @Component({
@@ -23,7 +24,10 @@ export class LoginPage {
   }
   public fireAuth: any;
   public database: any;
-  constructor(private storage: Storage, public userService: UserserviceProvider, public navCtrl: NavController, public formBuilder: FormBuilder, public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
+  constructor(private storage: Storage, public userService: UserserviceProvider, 
+      public navCtrl: NavController, public formBuilder: FormBuilder,
+       public toastCtrl: ToastController, public loadingCtrl: LoadingController,
+       public http: Http) {
     this.loginForm = formBuilder.group({
       email: ['', Validators.compose([Validators.required])],
       password: ['', Validators.compose([Validators.required])],
@@ -57,17 +61,25 @@ export class LoginPage {
             var user = snapshot.val();
             this.storage.set("id", authData.uid);
             this.userService.setUid(authData.uid);
+            var test = this.userService.getUid();
             
             if(user.isActive == true)
             {
+                /*this.http.get('http://localhost/api/sms/send').map(res => res.json())
+                            .subscribe(data=>{
+                                
+                            });*/
                 loader.dismiss();
                 this.navCtrl.setRoot(HomePage, {
-                    userData: authData.uid
+                    userData: test
                 });
             }
             else
             {
                  loader.dismiss();
+                 this.navCtrl.setRoot(UploadPage, {
+                    userData: authData.uid
+                });
             }
 
         });

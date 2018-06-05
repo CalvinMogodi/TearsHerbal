@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { OrderPage } from '../order/order';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
@@ -14,13 +14,25 @@ export class HomePage {
   uid : any;
   public database: any;
   public numOfOrders: any;
+  public user: any;
+  public points: any;
   public usersUnderMe = [];
+  public loading = true;
   
-  constructor(public userService: UserserviceProvider,public navCtrl: NavController, public navParams: NavParams, public storage: Storage)
+  constructor(public userService: UserserviceProvider,public navCtrl: NavController, 
+                public navParams: NavParams, public storage: Storage,
+                public events: Events)
   {
     this.uid = navParams.get('userData');
+    this.events.publish("gotId", this.uid);
     //this.uid = this.userService.getUid();
     this.database = firebase.database();
+    
+    //get user
+     this.database.ref().child('users/' + this.uid).once('value', (snapshot)=>{
+            this.user = snapshot.val();
+            this.points = this.user.points;
+        });
     
     //get number of orders placed
     var refForOrders = this.database.ref();
@@ -56,10 +68,12 @@ export class HomePage {
                this.usersUnderMe.push(snap.val());
                
            });
+           
+           this.loading = false;
         }
         else
         {
-
+            this.loading = false;
         }
          
      }); 

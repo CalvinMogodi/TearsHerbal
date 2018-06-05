@@ -22,6 +22,7 @@ export class OrderPage {
     public availableStock: any;
     public showButton = false
     public historicOrders = [];
+    public loading = true;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public modalCtrl: ModalController, public storage: Storage) {
@@ -51,10 +52,12 @@ export class OrderPage {
                   this.historicOrders.push(snap.val());
 
               });
+              
+              this.loading = false;
            }
            else
            {
-
+                this.loading = false;
            }
 
         });

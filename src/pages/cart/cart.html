@@ -7,7 +7,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Description
+      Cart
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
@@ -19,30 +19,96 @@
 </ion-header>
 
 
-<ion-content padding>
-    <ion-list>
-
-    <ion-item>
-      <ion-label floating>Quantity</ion-label>
-      <ion-input [(ngModel)]="order.quantity" type="text"></ion-input>
-    </ion-item>
-    <ion-item>
-        <ion-label>Payment Method</ion-label>
-          <ion-select [(ngModel)]="order.paymentMethod">
-            <ion-option *ngFor="let method of paymentMethods">{{method}}</ion-option>
-        </ion-select>
-    </ion-item>
-    <ion-item>
-        <ion-label>Delivery Method</ion-label>
-          <ion-select [(ngModel)]="order.deliveryMethod">
-            <ion-option *ngFor="let method of deliveryMethods">{{method}}</ion-option>
-        </ion-select>
-    </ion-item>
-</ion-list>
-    <p>
-        {{order.userId}}
-    </p>
-<div style="text-align: center">
-    <button (click)="placeOrder()" ion-button color="secondary" style="width:100%" round>Place order</button>
-</div>
+<ion-content style="background-color: #edeaea" padding>
+    <ion-card>
+        <ion-card-content>
+            <ion-list>
+                <ion-item>
+                  <ion-label floating>Quantity</ion-label>
+                  <ion-input [(ngModel)]="order.quantity" (ngModelChange)="calculateTotal($event)" type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Payment Method</ion-label>
+                      <ion-select [(ngModel)]="order.paymentMethod">
+                        <ion-option *ngFor="let method of paymentMethods">{{method}}</ion-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Delivery Method</ion-label>
+                      <ion-select [(ngModel)]="order.deliveryMethod" (ngModelChange)="checkValue($event)">
+                        <ion-option *ngFor="let method of deliveryMethods">{{method}}</ion-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item *ngIf="showAddress">
+                    <ion-label>Delivery Address</ion-label>
+                        <ion-input [(ngModel)]="order.deliveryAddress" type="text"></ion-input>
+                </ion-item>
+            </ion-list>
+            <div>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col s6>
+                            Total
+                        </ion-col>
+                        <ion-col s6>
+                            R {{priceTotal}}
+                        </ion-col>
+                    </ion-row>
+                    
+                </ion-grid>
+            </div>
+            <div *ngIf="showSpinner" style="text-align: center">
+                    <ion-spinner></ion-spinner>
+                </div>
+            <div style="text-align: center" *ngIf="!showSpinner">
+                <button (click)="placeOrder()" ion-button color="secondary" style="width:100%" round>Place order</button>
+            </div>
+        </ion-card-content>
+    </ion-card>
+    <ion-card>
+        <!--<ion-card-content>
+            <p>{{data}}</p>
+        </ion-card-content>-->
+    </ion-card>
+    <ion-card [hidden]="!showPaymentForm">
+        <ion-card-content>
+            <form action="/" method="post" id="payment-form">
+                <div class="form-row">
+                    <div id="card-element">
+                    </div>
+                    <div id="card-errors" role="alert">
+                    </div>
+                </div>
+                <button ion-button block large>Pay</button>
+            </form>
+        </ion-card-content>
+    </ion-card>
+    <!--<ion-card>
+        <ion-card-content>
+            <form id="myCCForm" action="/" method="post">
+                <input name="token" type="hidden" value="" />
+                <div>
+                  <label>
+                    <span>Card Number</span>
+                    <input id="ccNo" name="ccNo" [(ngModel)]="checkoutCard.ccNo" type="text" value="" autocomplete="off" required />
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span>Expiration Date (MM/YYYY)</span>
+                    <input id="expMonth" name="expMonth" [(ngModel)]="checkoutCard.expMonth" type="text" size="2" required />
+                  </label>
+                  <span> / </span>
+                  <input id="expYear" name="expYear" [(ngModel)]="checkoutCard.expYear" type="text" size="4" required />
+                </div>
+                <div>
+                  <label>
+                    <span>CVC</span>
+                    <input id="cvv" name="cvv" [(ngModel)]="checkoutCard.cvv" type="text" value="" autocomplete="off" required />
+                  </label>
+                </div>
+                <input type="submit" value="Submit Payment" />
+            </form>
+        </ion-card-content>
+    </ion-card> -->
 </ion-content>
