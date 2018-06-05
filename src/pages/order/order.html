@@ -35,8 +35,8 @@
         <ion-card-title>
           Order History
           </ion-card-title>
-          <p *ngIf="historicOrders.length <= 0 && !loading">no items</p>
-        <ion-spinner *ngIf="historicOrders.length <= 0 && loading"></ion-spinner>
+          
+        <ion-spinner *ngIf="historicOrders.length <= 0"></ion-spinner>
         <ion-item-group *ngIf="historicOrders.length > 0">
             <ion-item-divider *ngFor="let order of historicOrders" [value]="order.createdDate">order date:{{order.createdDate}} <br>quantity: {{order.quantity}}</ion-item-divider>
         </ion-item-group>

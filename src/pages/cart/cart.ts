@@ -53,7 +53,7 @@ export class CartPage {
         deliveryMethod: '',
         deliveryAddress: '',
         paymentMethod: '',
-        quantity: 1,
+        quantity: 0,
         status: 'Pending Payment',
         userId: '',
         monthId: new Date().getMonth()+1,
@@ -432,9 +432,13 @@ export class CartPage {
                                duration: 3000,
                                position: 'top'
                              });
+                             
+                              toast.onDidDismiss(() => {
+                               this.showSpinner = false;
+                             });
                           
                         toast.present();
-                        this.showSpinner = false;
+                        
                   }
               });
           }

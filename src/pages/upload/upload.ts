@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 import { LoadingController } from 'ionic-angular';
+import { UserserviceProvider } from '../../providers/userservice/userservice';
+import { AwaitingApprovalPage } from '../awaitingapproval/awaitingapproval';
 
 /**
  * Generated class for the UploadPage page.
@@ -17,49 +19,55 @@ import { LoadingController } from 'ionic-angular';
   templateUrl: 'upload.html',
 })
 export class UploadPage {
-
+  showUploadButton = true;
+  uid: any;
   files =
   [
-      {
-          name: "mash.pdf"
-      },
-      {
-          name: "Once an Addict.mp3"
-      },
-      {
-          name: "shudu?.pdf"
-      }
+    {
+      name: "mash.pdf"
+    },
+    {
+      name: "Once an Addict.mp3"
+    },
+    {
+      name: "shudu?.pdf"
+    }
   ];
-  showUploadButton = true;
+
   rootDirectory = 'file:///';
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              public fileNavigator: File, public loadingCtrl: LoadingController)
-  {
+    public fileNavigator: File, public loadingCtrl: LoadingController, public userService: UserserviceProvider) {
+    this.uid = navParams.get('userData');
 
   }
 
-  listDirectories()
-  {
-      this.showUploadButton = false;
-     /* this.fileNavigator.listDir(this.rootDirectory, '').then((data)=>
-        {
-            this.files = data;
-        }); */
+  listDirectories() {
+    this.showUploadButton = false;
+    /* this.fileNavigator.listDir(this.rootDirectory, '').then((data)=>
+       {
+           this.files = data;
+       }); */
   }
 
-  uploadDocument()
-  {
+  uploadDocument() {
     let loader = this.loadingCtrl.create({
       content: "uploading...",
     });
 
     loader.present();
+    this.userService.userHasUploadedPOP(this.uid).then(authData => {
+      setTimeout(() => {
+        loader.dismiss();
+        this.showUploadButton = true;
+      }, 3000);
+      this.navCtrl.setRoot(AwaitingApprovalPage, {
+        userData: this.uid
+      });
+    });
 
-    setTimeout(() => {
-      loader.dismiss();
-      this.showUploadButton = true;
-    }, 3000);
+
+
   }
 
   ionViewDidLoad() {

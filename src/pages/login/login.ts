@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, ToastController, LoadingController, Loading } from 'ionic-angular';
 import { RegisterPage } from '../register/register';
 import { HomePage } from '../home/home';
+//import { AwaitingApprovalPage } from '../awaitingapproval/awaitingapproval';
 import { UploadPage } from '../upload/upload';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
@@ -74,12 +75,22 @@ export class LoginPage {
                     userData: test
                 });
             }
+            /*else if(user.hasUploadedPOP == true){
+              loader.dismiss();
+                this.navCtrl.setRoot(AwaitingApprovalPage, {
+                    userData: authData.uid
+                });              
+            }*/
             else
             {
                  loader.dismiss();
                  this.navCtrl.setRoot(UploadPage, {
                     userData: authData.uid
                 });
+               loader.dismiss();
+               this.navCtrl.setRoot(UploadPage, {
+                    userData: authData.uid
+                });                
             }
 
         });
