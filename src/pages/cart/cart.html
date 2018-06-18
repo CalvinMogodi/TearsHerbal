@@ -70,7 +70,7 @@
             <p>{{data}}</p>
         </ion-card-content>-->
     </ion-card>
-    <ion-card [hidden]="!showPaymentForm">
+    <!--<ion-card [hidden]="!showPaymentForm">
         <ion-card-content>
             <form action="/" method="post" id="payment-form">
                 <div class="form-row">
@@ -82,33 +82,33 @@
                 <button ion-button block large>Pay</button>
             </form>
         </ion-card-content>
-    </ion-card>
-    <!--<ion-card>
+    </ion-card>-->
+    <ion-card *ngIf="showPaymentForm">
         <ion-card-content>
-            <form id="myCCForm" action="/" method="post">
-                <input name="token" type="hidden" value="" />
-                <div>
-                  <label>
-                    <span>Card Number</span>
-                    <input id="ccNo" name="ccNo" [(ngModel)]="checkoutCard.ccNo" type="text" value="" autocomplete="off" required />
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    <span>Expiration Date (MM/YYYY)</span>
-                    <input id="expMonth" name="expMonth" [(ngModel)]="checkoutCard.expMonth" type="text" size="2" required />
-                  </label>
-                  <span> / </span>
-                  <input id="expYear" name="expYear" [(ngModel)]="checkoutCard.expYear" type="text" size="4" required />
-                </div>
-                <div>
-                  <label>
-                    <span>CVC</span>
-                    <input id="cvv" name="cvv" [(ngModel)]="checkoutCard.cvv" type="text" value="" autocomplete="off" required />
-                  </label>
-                </div>
-                <input type="submit" value="Submit Payment" />
-            </form>
+            <ion-grid>
+                <ion-row>
+                    <input type="text" [(ngModel)]="cardDetails.cardNumber" class="card-number" placeholder="Card Number">
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <input type="text" [(ngModel)]="cardDetails.expiryMonth" class="card-number" placeholder="Month (mm)">
+                    </ion-col>
+                    <ion-col>
+                        <input type="text" [(ngModel)]="cardDetails.expiryYear" class="card-number" placeholder="Year (YYYY)">
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <input type="text" [(ngModel)]="cardDetails.cvv" class="card-number" placeholder="CVV">
+                    </ion-col>
+                    <ion-col>
+                        
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+            <div style="text-align: center">
+                <button (click)="pay()" ion-button color="primary" style="width:100%" round>Pay</button>
+            </div>
         </ion-card-content>
-    </ion-card> -->
+    </ion-card> 
 </ion-content>

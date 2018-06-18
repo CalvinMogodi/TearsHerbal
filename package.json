@@ -67,7 +67,7 @@
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-firebase": {},
-      "cordova-sqlite-storage": {}
+      "cordova-sqlite-storage": {},
       "cordova-plugin-file": {},
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-camera": {},
