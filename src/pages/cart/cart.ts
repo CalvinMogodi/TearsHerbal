@@ -4,7 +4,7 @@ import { Storage } from '@ionic/storage';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
 import { ToastController } from 'ionic-angular';
 import { HomePage } from '../home/home';
-import { Http } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import * as firebase from 'firebase';
 
 declare var Stripe;
@@ -49,7 +49,7 @@ export class CartPage {
     ];
     
     public order = {
-        createdDate: '',
+        createdDate: null,
         deliveryMethod: '',
         deliveryAddress: '',
         paymentMethod: '',
@@ -61,6 +61,14 @@ export class CartPage {
         user: '',
         reference: ''
     }
+    
+    public cardDetails = 
+    {
+        cardNumber: '',
+        expiryMonth: '',
+        expiryYear: '',
+        cvv: ''
+    };
     
      public database: any;
      public stock: any;
@@ -94,7 +102,7 @@ export class CartPage {
         
         var date = dd + '-' + mm + '-' + yyyy;
         
-        this.order.createdDate = date;
+        //this.order.createdDate = date;
         
         var startSearchString = '1-';
         startSearchString = startSearchString + today.getMonth()+1 + '-';
@@ -142,8 +150,28 @@ export class CartPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CartPage');
-    this.setupStripe();
+    //this.setupStripe();
   }
+  
+  timeConverter(UNIX_timestamp)
+  {
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+    return time;
+  }
+  
+toTimestamp(strDate)
+{
+    var datum = Date.parse(strDate);
+    return datum/1000;
+}
   
   requestToken()
   {
@@ -320,6 +348,46 @@ export class CartPage {
       this.priceTotal = quantity * 450;
   }
   
+  pay()
+  {
+      var test = this.cardDetails;
+      
+      //place order in db
+       //generate reference
+            var text = "";
+            var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+            var len = 5;
+
+            for( var i=0; i < len; i++ )
+                text += charset.charAt(Math.floor(Math.random() * charset.length));
+                
+            this.order.reference = text;
+
+            var newOrder =  this.database.ref('orders').push();
+            this.order.user = this.user.name + " " + this.user.surname;
+            this.order.reference = text;
+            this.order.createdDate = this.toTimestamp(new Date().toString());
+            newOrder.set(this.order, done=>
+            {
+                //make payment
+                 var headers = new Headers();
+                headers.append("Accept", 'application/json');
+                headers.append('Content-Type', 'application/x-www-form-urlencoded' );
+                let options = new RequestOptions({ headers: headers });
+                
+                var notification = 
+                JSON.stringify({
+                    number: this.user.cellPhone,
+                    reference: this.order.reference
+                });
+                
+                this.http.post('http://localhost/api/charge', JSON.stringify(this.cardDetails), options)
+                            .subscribe(data=>{
+                                var breakeHere = "";
+                            });
+            });
+  }
+  
   placeOrder()
   {
       this.showSpinner = true;
@@ -340,7 +408,24 @@ export class CartPage {
 
             var newOrder =  this.database.ref('orders').push();
             this.order.user = this.user.name + " " + this.user.surname;
+            this.order.reference = text;
             newOrder.set(this.order, done=>{
+                //send sms with reference
+                var headers = new Headers();
+                headers.append("Accept", 'application/json');
+                headers.append('Content-Type', 'application/x-www-form-urlencoded' );
+                let options = new RequestOptions({ headers: headers });
+                
+                var notification = 
+                JSON.stringify({
+                    number: this.user.cellPhone,
+                    reference: this.order.reference
+                });
+                
+                this.http.post('http://localhost/api/sms/send', notification, options)
+                            .subscribe(data=>{
+                                var breakeHere = "";
+                            });
                  //update count
                  var newStock = this.database.ref('avaliableStock')
                     .set(this.stock - Number(this.order.quantity), done2=>{
