@@ -14,3 +14,11 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+.menuButton{
+color:seagreen !important;
+}
+
+.menuButton:hover{
+    color:seagreen !important;
+     background-color: #f9fffe !important;
+}

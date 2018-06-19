@@ -17,7 +17,8 @@ export class MyApp {
   rootPage: any = LoginPage;
   public displayname = 'Name Surname';
   id: any;
-  pages: Array<{title: string, component: any, icon: string}>;
+  userId: any;
+  pages: Array<{title: string, component: any, icon: string, isActive: boolean}>;
   
   constructor(public platform: Platform, public statusBar: StatusBar, 
       public splashScreen: SplashScreen, public events: Events) {
@@ -30,6 +31,7 @@ export class MyApp {
     firebase.auth().onAuthStateChanged( user => {
       if(user){
           let storageRef = firebase.storage().ref();
+          this.userId = user.uid;
          var starsRef = storageRef.child('profileImages/' + user.uid);        
                starsRef.getDownloadURL().then( url => {
                     this.profilePicURL = url;
@@ -46,9 +48,9 @@ export class MyApp {
     })
     // used for an example of ngFor and navigation
     this.pages = [     
-      { title: 'Home', component: HomePage, icon: 'home' },
-      { title: 'Profile', component: ProfilePage, icon: 'person' },
-      { title: 'Log Out', component: LoginPage, icon: 'lock'},
+      { title: 'Home', component: HomePage, icon: 'home', isActive: false },
+      { title: 'Profile', component: ProfilePage, icon: 'person', isActive: true },
+      { title: 'Log Out', component: LoginPage, icon: 'lock', isActive: false },
     ];
 
   }
@@ -63,17 +65,17 @@ export class MyApp {
   }
 
   openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-
     if(page.title == 'Profile')
     {
       this.nav.push(page.component, {
-        profileId: this.id
+        profileId: this.userId
       });
     }else{
+      if(page.title == 'Log Out'){
+          firebase.auth().signOut();
+      }
       this.nav.setRoot(page.component, {
-          profileId: this.id
+          profileId: this.userId
       });
     }
     

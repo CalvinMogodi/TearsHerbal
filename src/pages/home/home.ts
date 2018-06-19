@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NavController, NavParams, Events } from 'ionic-angular';
+import { NavController, NavParams, Events ,MenuController} from 'ionic-angular';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { OrderPage } from '../order/order';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
@@ -19,7 +19,7 @@ export class HomePage {
   public usersUnderMe = [];
   public loading = true;
   
-  constructor(public userService: UserserviceProvider,public navCtrl: NavController, 
+  constructor(private menu: MenuController,public userService: UserserviceProvider,public navCtrl: NavController, 
                 public navParams: NavParams, public storage: Storage,
                 public events: Events)
   {
@@ -34,16 +34,15 @@ export class HomePage {
             if(this.user != undefined || this.user != null){
                 if(this.user.points != undefined || this.user.points != null)
                 this.points = this.user.points;
-            }
-            
+            }else{
+                this.points = 0;
+            }           
             
         });
     
     //get number of orders placed
     var refForOrders = this.database.ref();
     refForOrders.child('orders').orderByChild('userId').equalTo(this.uid).once('value', (snapshot)=>{
-     //this.database.ref('orders').orderByValue().once('value', (snapshot) =>{
-         
          var test = snapshot.val();
          if(test != null)
          {
@@ -62,8 +61,6 @@ export class HomePage {
      //get people under user
      var refForUsers = this.database.ref();
      refForUsers.child('users').orderByChild('referredBy').equalTo(this.uid).once('value', (snapshot)=>{
-     //this.database.ref('orders').orderByValue().once('value', (snapshot) =>{
-         
         var test = snapshot.val();
         if(test != null)
         {
@@ -85,9 +82,16 @@ export class HomePage {
      
   }
 
+  ionViewDidEnter() {
+    this.menu.swipeEnable(false);
+
+    // If you have more than one side menu, use the id like below
+    // this.menu.swipeEnable(false, 'menu1');
+  }
+
   public viewOrders()
   {
-    this.navCtrl.setRoot(OrderPage, {
+    this.navCtrl.push(OrderPage, {
         userData2: this.uid
     });
   }

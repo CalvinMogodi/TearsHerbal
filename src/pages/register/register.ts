@@ -37,7 +37,9 @@ export class RegisterPage {
         bankName: '',
         userType:'User',
         isActive: false,
-        points: 0
+        points: 0,
+        displayName: '',
+        uploadedIDNumberPassport: false
     }
     selectImagePath = 'assets/imgs/ic_person_black.png';
     public step = 1;
@@ -80,9 +82,7 @@ export class RegisterPage {
     }
 
     back() {
-
         this.step = 1;
-
     }
 
     signUp() {
@@ -96,7 +96,7 @@ export class RegisterPage {
             });
 
             loader.present();
-
+            this.account.displayName = this.account.name + ' ' + this.account.surname;
             this.userService.signUpUser(this.account).then(authData => {
                 loader.dismiss();
                 let toast = this.toastCtrl.create({
