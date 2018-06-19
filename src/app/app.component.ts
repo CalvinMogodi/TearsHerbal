@@ -13,32 +13,42 @@ import { ProfilePage } from '../pages/profile/profile';
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
-
+  profilePicURL = 'assets/imgs/profile.png';
   rootPage: any = LoginPage;
+  public displayname = 'Name Surname';
   id: any;
-
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{title: string, component: any, icon: string}>;
   
   constructor(public platform: Platform, public statusBar: StatusBar, 
       public splashScreen: SplashScreen, public events: Events) {
       events.subscribe("gotId", (uid)=>{
           this.id = uid;
       });
-    this.initializeApp();
+    this.initializeApp();  
+
     var that = this;
-    firebase.auth().onAuthStateChanged(function(user){
+    firebase.auth().onAuthStateChanged( user => {
       if(user){
-        that.rootPage = LoginPage;
+          let storageRef = firebase.storage().ref();
+         var starsRef = storageRef.child('profileImages/' + user.uid);        
+               starsRef.getDownloadURL().then( url => {
+                    this.profilePicURL = url;
+                });
+        that.rootPage = HomePage;
+        this.nav.setRoot(HomePage, {
+                    userData: user.uid
+                });
       }
       else{
         that.rootPage = LoginPage;
+        this.nav.setRoot(LoginPage);
       }
     })
     // used for an example of ngFor and navigation
-    this.pages = [
-      { title: 'Log Out', component: LoginPage },
-      { title: 'Home', component: HomePage },
-      { title: 'Profile', component: ProfilePage }
+    this.pages = [     
+      { title: 'Home', component: HomePage, icon: 'home' },
+      { title: 'Profile', component: ProfilePage, icon: 'person' },
+      { title: 'Log Out', component: LoginPage, icon: 'lock'},
     ];
 
   }
@@ -55,8 +65,17 @@ export class MyApp {
   openPage(page) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component, {
+
+    if(page.title == 'Profile')
+    {
+      this.nav.push(page.component, {
         profileId: this.id
-    });
+      });
+    }else{
+      this.nav.setRoot(page.component, {
+          profileId: this.id
+      });
+    }
+    
   }
 }

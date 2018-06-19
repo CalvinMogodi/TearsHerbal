@@ -5,6 +5,8 @@ import { HttpModule } from '@angular/http';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 import { Camera } from '@ionic-native/camera';
+import { FileChooser } from '@ionic-native/file-chooser';
+import { IOSFilePicker } from '@ionic-native/file-picker';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -77,6 +79,9 @@ firebase.initializeApp(firebaseConfig);
     UserserviceProvider,
     FileTransfer,
     FileTransferObject,
+    FileChooser,
+    IOSFilePicker,
+    Camera,
     File,
   ]
 })

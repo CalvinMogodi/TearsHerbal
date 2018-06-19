@@ -25,6 +25,7 @@
     "@ionic-native/core": "4.7.0",
     "@ionic-native/file": "^4.7.0",
     "@ionic-native/file-chooser": "^4.7.0",
+    "@ionic-native/file-picker": "^4.7.0",
     "@ionic-native/file-transfer": "^4.7.0",
     "@ionic-native/splash-screen": "4.7.0",
     "@ionic-native/status-bar": "4.7.0",
@@ -38,6 +39,7 @@
     "cordova-plugin-file": "^6.0.1",
     "cordova-plugin-file-transfer": "^1.7.1",
     "cordova-plugin-filechooser": "^1.0.1",
+    "cordova-plugin-filepicker": "^1.1.5",
     "cordova-plugin-firebase": "^1.0.5",
     "cordova-plugin-ionic": "^4.1.7",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
@@ -77,7 +79,8 @@
         "UPDATE_API": "https://api.ionicjs.com",
         "MAX_STORE": "2"
       },
-      "cordova-plugin-filechooser": {}
+      "cordova-plugin-filechooser": {},
+      "cordova-plugin-filepicker": {}
     },
     "platforms": [
       "android"

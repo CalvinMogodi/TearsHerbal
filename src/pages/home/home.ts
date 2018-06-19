@@ -31,7 +31,12 @@ export class HomePage {
     //get user
      this.database.ref().child('users/' + this.uid).once('value', (snapshot)=>{
             this.user = snapshot.val();
-            this.points = this.user.points;
+            if(this.user != undefined || this.user != null){
+                if(this.user.points != undefined || this.user.points != null)
+                this.points = this.user.points;
+            }
+            
+            
         });
     
     //get number of orders placed

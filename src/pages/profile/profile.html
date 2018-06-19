@@ -7,19 +7,20 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>profile</ion-title>
+    <ion-title><h2>Profile</h2></ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content style="background-color: #edeaea" padding>
-    <ion-card>
-        <img src="../assets/imgs/6lack.jpg"/>
+    <ion-card style="border-radius: 15px">
+        <img src="{{profilePicURL}}" />
+        <button (click)="openeditprofile()" ion-button full style="margin: 0px;border-radius: 0px 0px 15px 15px" >Change Your Profile Image</button>
         <div class="card-title"></div>
         <div class="card-subtitle"></div>
     </ion-card>
-    <ion-card>
+    <ion-card style="border-radius: 15px">
         <ion-card-content>
             <div style="text-align: center">
                 <ion-spinner *ngIf="!showForm"></ion-spinner>
@@ -27,39 +28,44 @@
             
                 <ion-list *ngIf="showForm">
                     <ion-item>
-                        <ion-label floating>Name</ion-label>
+                        <ion-label floating><b>Name</b></ion-label>
                         <ion-input [(ngModel)]="user.name" type="text" value="{{user.name}}"></ion-input>
                     </ion-item>
                     <ion-item>
-                        <ion-label floating>Surname</ion-label>
+                        <ion-label floating><b>Surname</b></ion-label>
                         <ion-input type="text" value="{{user.surname}}"></ion-input>
                     </ion-item>
                      <ion-item>
-                        <ion-label floating>Cellphone</ion-label>
+                        <ion-label floating><b>Cellphone</b></ion-label>
                         <ion-input type="text" value="{{user.cellPhone}}"></ion-input>
                     </ion-item>
                      <ion-item>
-                        <ion-label floating>Email Address</ion-label>
+                        <ion-label floating><b>Email Address</b></ion-label>
                         <ion-input type="text" value="{{user.email}}"></ion-input>
                     </ion-item>
                     <ion-item>
-                        <ion-label floating>ID Number</ion-label>
+                        <ion-label floating><b>ID Number</b></ion-label>
                         <ion-input type="text" value="{{user.IDNumber}}"></ion-input>
                     </ion-item>
                     <ion-item>
-                        <ion-label floating>Bank Name</ion-label>
+                        <button (click)="pickFile()" class="summitbutton" ion-button full style="margin: 0px">Upload ID / Passport Image</button>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label floating><b>Bank Name</b></ion-label>
                         <ion-input type="text" value="{{user.bankName}}"></ion-input>
                     </ion-item>
                     <ion-item>
-                        <ion-label floating>Account Number</ion-label>
+                        <ion-label floating><b>Account Number</b></ion-label>
                         <ion-input type="text" value="{{user.accountNumber}}"></ion-input>
                     </ion-item>
                     <ion-item>
-                        <ion-label floating>Address</ion-label>
+                        <ion-label floating><b>Address</b></ion-label>
                         <ion-input type="text" value="{{user.address}}"></ion-input>
                     </ion-item>
-                </ion-list>
-                <button (click)="updateUser()" ion-button color="secondary" style="width:100%" round>Save Profile</button>
+                    <ion-item class="center" no-lines justify-content-center align-items-center>
+                        <button (click)="updateUser()" ion-button color="secondary" style="width:90%" round class="summitbutton">Save Profile</button>
+                    </ion-item>
+                </ion-list>                
             
         </ion-card-content>
     </ion-card>
