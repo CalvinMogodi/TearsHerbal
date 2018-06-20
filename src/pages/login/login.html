@@ -1,13 +1,7 @@
-<ion-header>
-  <ion-navbar hideBackButton="true">
-    <ion-title style="text-align:center">
-      <img width="50" height="50" src="assets/imgs/Teras_Herbal_Juice_Logo.png">
-    </ion-title>
-  </ion-navbar>
 
-</ion-header>
-<ion-content padding style="background-color: #edeaea">
-  <ion-card>
+<ion-content padding class="login-background">
+   <img width="150" height="150" src="assets/imgs/teras_logo.png">
+  <ion-card style="border-radius: 15px">
     <form [formGroup]="loginForm">
       <ion-list padding>
         <ion-item>
@@ -22,19 +16,16 @@
         </ion-item>
       </ion-list>
       <div padding>
+        <small>By signing in, I agree to <span style="color: mediumblue;" (click)="termsandconditions()">terms and conditions</span></small>
         <button ion-button block class="login-btn" (click)="signIn()">Sign In</button>
         <p *ngIf="showError" style="color: red;font-size: xx-small"> invalid email or password. </p>
       </div>
-      <ion-row style="margin-top: -20px;">
+      <ion-row style="margin-top: -15px;margin-bottom: 10px;">
         <ion-col>
-          <button (click)="register()" ion-button icon-left clear small class="login-links">
-        <div>Register</div>
-      </button>
+          <label (click)="register()" clear small class="login-links">Register</label>
         </ion-col>
         <ion-col>
-          <button ion-button icon-left clear small class="login-links" (click)="forgotPassword()">
-        <div>Forgot Password?</div>
-      </button>
+          <label clear small class="login-links" (click)="forgotpassword()">Forgot Password?</label>
         </ion-col>
       </ion-row>
     </form>

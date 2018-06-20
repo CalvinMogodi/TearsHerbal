@@ -1,5 +1,5 @@
-<ion-header>
-    <ion-navbar>
+<ion-header transparent>
+    <ion-navbar transparent>
         <ion-title>
             Register
         </ion-title>
@@ -50,21 +50,31 @@
     <ion-card *ngIf="step == 2" style="border-radius: 15px">
         <form [formGroup]="signUpSecondForm">
             <ion-list>
-                <ion-item>
-                    <div style="text-align:-webkit-center !important;">
-                        <img *ngIf="selectImagePath" [(src)]="selectImagePath" style="width: 50px;height: 50px;">
-                    </div>
-                </ion-item>
-                <ion-item>
+                <!--<ion-item>
                   <ion-label>Referred By</ion-label>
                     <ion-select [(ngModel)]="account.referredBy" [ngModelOptions]="{standalone: true}" >
                         <ion-option *ngFor="let people of peoples" [value]="people.key">{{people.name}}</ion-option>
                     </ion-select>
                 </ion-item>
-                <!--<ion-item>
+                <ion-item>
                     <ion-label floating>Referred By</ion-label>
                     <ion-input [(ngModel)]="account.referredBy" formControlName="referredBy" [class.invalid]="!signUpSecondForm.controls.referredBy.valid && (signUpSecondForm.controls.referredBy.dirty || secondSubmitAttempt)" type="text"></ion-input>
                 </ion-item>-->
+                <ion-item>
+                    <div class="autocomplete">
+	<ion-searchbar [(ngModel)]="referredBy" formControlName="referredBy" 
+		(ionFocus)="addFocus()"
+		(ionInput)="search()"
+		(ionBlur)="removeFocus()"
+		debounce=500>
+	</ion-searchbar>
+	<ion-list>
+		<ion-item style="background-color:#f8f8f8;" *ngFor="let person of peoples" (click)="addNote(person)">
+            <span style="color:seagreen">{{person.name}} {{person.surname}} - {{person.IDNumber}}</span>			
+		</ion-item>
+	</ion-list>
+</div>
+                </ion-item>
                 <ion-item>
                     <ion-label floating>Address</ion-label>
                     <ion-input [(ngModel)]="account.address" formControlName="address" [class.invalid]="!signUpSecondForm.controls.address.valid && (signUpSecondForm.controls.address.dirty || secondSubmitAttempt)" type="text"></ion-input>
@@ -85,8 +95,8 @@
                     <button ion-button block class="btn" (click)="signUp()">Sign Up</button>
                      <p *ngIf="showError" style="color: red;font-size: xx-small"> {{message}} </p>
                 </div>
-                <div padding>
-                    <button ion-button icon-left clear small block class="login-links" (click)="back()">Previous</button>
+                <div padding style="text-align: center;;margin-top: -15px;margin-bottom: 10px;">
+                    <label clear small block class="login-links" (click)="back()">Previous</label>
                 </div>
             </ion-list>
         </form>

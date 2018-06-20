@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import { NavController, ToastController, LoadingController, Loading } from 'ionic-angular';
+import { NavController, ToastController, LoadingController, Loading, MenuController } from 'ionic-angular';
 import { RegisterPage } from '../register/register';
 import { HomePage } from '../home/home';
 //import { AwaitingApprovalPage } from '../awaitingapproval/awaitingapproval';
 import { UploadPage } from '../upload/upload';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
+import { ForgotpasswordPage } from '../forgotpassword/forgotpassword';
+import { TermsandconditionsPage } from '../termsandconditions/termsandconditions';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 import { Http } from '@angular/http';
@@ -28,7 +30,9 @@ export class LoginPage {
   constructor(private storage: Storage, public userService: UserserviceProvider, 
       public navCtrl: NavController, public formBuilder: FormBuilder,
        public toastCtrl: ToastController, public loadingCtrl: LoadingController,
-       public http: Http) {
+       public http: Http, private menuCtrl: MenuController) {
+
+    this.menuCtrl.enable(false);
     this.loginForm = formBuilder.group({
       email: ['', Validators.compose([Validators.required])],
       password: ['', Validators.compose([Validators.required])],
@@ -42,8 +46,11 @@ export class LoginPage {
     this.navCtrl.push(RegisterPage);
   }
 
-  forgotPassword() {
-    console.log('ionViewDidLoad LoginPage');
+  forgotpassword() {
+     this.navCtrl.push(ForgotpasswordPage);
+  }
+  termsandconditions(){
+    this.navCtrl.push(TermsandconditionsPage);
   }
 
   signIn() {

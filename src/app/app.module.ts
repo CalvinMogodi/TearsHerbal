@@ -14,6 +14,8 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { LoginPage } from '../pages/login/login';
+import { ForgotpasswordPage } from '../pages/forgotpassword/forgotpassword';
+import { TermsandconditionsPage } from '../pages/termsandconditions/termsandconditions';
 import { RegisterPage } from '../pages/register/register';
 import { UploadPage } from '../pages/upload/upload';
 import { OrderPage } from '../pages/order/order';
@@ -48,7 +50,9 @@ firebase.initializeApp(firebaseConfig);
     UploadPage,
     OrderPage,
     CartPage,
-    ProfilePage
+    ProfilePage,
+    ForgotpasswordPage,
+    TermsandconditionsPage
     //AwaitingApprovalPage
   ],
   imports: [
@@ -71,7 +75,9 @@ firebase.initializeApp(firebaseConfig);
     UploadPage,
     OrderPage,
     CartPage,
-    ProfilePage
+    ProfilePage,
+    ForgotpasswordPage,
+    TermsandconditionsPage
     //AwaitingApprovalPage
   ],
   providers: [

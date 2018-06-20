@@ -1,6 +1,6 @@
 import { LoginPage } from '../login/login';
 import { Component } from '@angular/core';
-import { NavController, ToastController, LoadingController, Loading } from 'ionic-angular';
+import { NavController, ToastController, LoadingController, Loading, MenuController } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
@@ -19,7 +19,7 @@ export class RegisterPage {
     showError: boolean = false;
     message: string;
     database: any;
-    
+    referredBy: any;
     peoples = [];
 
     public account = {
@@ -30,6 +30,7 @@ export class RegisterPage {
         password: '',
         confirmPassword: '',
         referredBy: '',
+        referredByUser: '',
         address: '',
         accountNumber: '',
         profilePicture: '',
@@ -43,19 +44,8 @@ export class RegisterPage {
     }
     selectImagePath = 'assets/imgs/ic_person_black.png';
     public step = 1;
-    constructor(public userService: UserserviceProvider, public navCtrl: NavController, public formBuilder: FormBuilder, public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
-            //get all users
-            this.database = firebase.database();
-            
-            this.database.ref().child('users').once('value', (snapshot)=>{
-                snapshot.forEach(snap=>
-                {
-                    var item = snap.val();
-                    item.key = snap.key;
-                    this.peoples.push(item);
-                });
-            });
-            
+    constructor(private menuCtrl: MenuController, public userService: UserserviceProvider, public navCtrl: NavController, public formBuilder: FormBuilder, public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
+            this.menuCtrl.enable(false);
             this.signUpFirstForm = formBuilder.group({
             email: ['', Validators.compose([Validators.required])],
             password: ['', Validators.compose([Validators.required])],
@@ -85,6 +75,37 @@ export class RegisterPage {
         this.step = 1;
     }
 
+    addFocus(){
+var s = 0;
+    }
+    search(){
+        let txt = this.referredBy.trim();
+        if(txt.length > 2){
+             let usersRef = firebase.database().ref('users');
+           usersRef.orderByValue().startAt(txt).limitToFirst(5).once('value', snapshot => {
+               var dsd = 0;
+               this.peoples = [];
+                snapshot.forEach(snap=>
+                {
+                    var item = snap.val();
+                    item.key = snap.key;
+                    this.peoples.push(item);
+                    return false;
+                });
+            });
+        }
+    }
+
+    removeFocus(){
+var s = 0;
+    }
+    
+    addNote(item){
+        this.referredBy = item.name + ' ' + item.surname + ' - ' + item.IDNumber;
+        this.account.referredByUser = item.name + ' ' + item.surname;
+        this.account.referredBy = item.key;
+        this.peoples = [];
+    }
     signUp() {
           this.showError = false;
          this.message = '';
@@ -105,7 +126,7 @@ export class RegisterPage {
                     position: 'bottom'
                 });
                 toast.present(toast);
-                this.navCtrl.push(LoginPage);
+                this.navCtrl.setRoot(LoginPage);
             }, error => {
                 loader.dismiss();
                 this.showError = true;
