@@ -4,9 +4,11 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpModule } from '@angular/http';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
+import { FilePath } from '@ionic-native/file-path';
 import { Camera } from '@ionic-native/camera';
 import { FileChooser } from '@ionic-native/file-chooser';
 import { IOSFilePicker } from '@ionic-native/file-picker';
+import { Base64 } from '@ionic-native/base64';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -82,7 +84,9 @@ firebase.initializeApp(firebaseConfig);
     FileChooser,
     IOSFilePicker,
     Camera,
+    Base64,
     File,
+    FilePath
   ]
 })
 export class AppModule {}

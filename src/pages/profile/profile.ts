@@ -8,6 +8,8 @@ import { IOSFilePicker } from '@ionic-native/file-picker';
 import { ToastController, ActionSheetController } from 'ionic-angular';
 import { File } from '@ionic-native/file';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { FilePath } from '@ionic-native/file-path';
+import { Base64 } from '@ionic-native/base64';
 
 /**
  * Generated class for the ProfilePage page.
@@ -31,7 +33,8 @@ export class ProfilePage {
   public file: File;
   constructor(public camera: Camera, public navCtrl: NavController, public navParams: NavParams, public platform: Platform, private fileChooser: FileChooser, public iosFilePicker: IOSFilePicker,
     public userserviceProvider: UserserviceProvider, public storage:
-      Storage, public toast: ToastController, public File: File, public actionSheetCtrl: ActionSheetController) {
+      Storage, public toast: ToastController, public File: File, private filePath: FilePath, public actionSheetCtrl: ActionSheetController, private base64: Base64) {
+
     this.userId = navParams.get('profileId');
     let storageRef = firebase.storage().ref();
     var starsRef = storageRef.child('profileImages/' + this.userId);
@@ -39,11 +42,9 @@ export class ProfilePage {
       this.profilePicURL = url;
     });
 
+
     var test = this.userserviceProvider.getUid();
     var id = null;
-
-    //var id = this.storage.get(':"{"uid":"ZKZ7NFGg9zQior7fMHMnwRgD2qs2","displayName":null,"photoURL":null,"email":"g@g.com","emailVerified":false,"identifierNumber":null,"isAnonymous":false,"providerData":[{"uid":"g@g.com","displayName":null,"photoURL":null,"email":"g@g.com","providerId":"password"}],"apiKey":"AIzaSyDNZ2-urHkW0xoe9rh9aexpp__FeHybkb8","appName":"[DEFAULT]","authDomain":"terasherbal-7694e.firebaseapp.com","stsTokenManager":{"apiKey":"AIzaSyDNZ2-urHkW0xoe9rh9aexpp__FeHybkb8","refreshToken":"AK2wQ-yFFQ4G-9sn0ZQrIKvR5HJ-B_yg54dVFKB_TKrq)
-    //this.storage.set("tessssssssssst", test);
     this.database = firebase.database();
     this.storageRef = firebase.storage().ref();
 
@@ -54,11 +55,10 @@ export class ProfilePage {
     });
   }
 
-  updateUser() {
+  updateUser(showError) {
     this.database.ref().child('users/' + this.userId).update(this.user);
-    // this.file = new File("../assets/imgs/6lack.jpg");
-    //this.file = ;
-    this.inserUserImage(this.file, this.userId);
+    if(showError)
+      this.showError('Your details are changed successful.');
   }
 
   ionViewDidLoad() {
@@ -97,7 +97,6 @@ export class ProfilePage {
 
 
   async captureImage(useAlbum: boolean) {
-    this.showError(this.userId);
     const options: CameraOptions = {
       quality: 100,
       destinationType: this.camera.DestinationType.DATA_URL,
@@ -107,15 +106,8 @@ export class ProfilePage {
     }
 
     this.camera.getPicture(options).then((imageData) => {
-
       let base64Image = 'data:image/jpeg;base64,' + imageData;
-      let toast = this.toast.create({
-        message: base64Image,
-        duration: 100000,
-        position: 'top'
-      });
-      toast.present();
-      //this.inserUserImage(base64Image, this.userId + 1);
+      this.inserUserImage(base64Image, this.userId);
     }, (err) => {
       this.showError(err);
     });
@@ -143,9 +135,44 @@ export class ProfilePage {
       });
   }
 
+  getfileext(filestring) {
+    let file = filestring.substr(filestring.lastIndexOf('.') + 1);
+    return file.toLowerCase();
+  }
+
+  readimage(result) {
+    var type = '';
+    
+    if (this.getfileext(result) == 'pdf') {
+      var type = 'application/pdf';
+    } else if (this.getfileext(result) == 'jpeg' || this.getfileext(result) == 'png' || this.getfileext(result) == 'jpg') {
+      var type = 'image/jpeg';
+    }
+    if (type == '') { 
+      this.showError('You can only upload PDF or image');    }    
+    else {
+     (<any>window).resolveLocalFileSystemURL(result, (res) => {
+        res.file((resFile) => {
+          var reader = new FileReader();
+          reader.readAsArrayBuffer(resFile);
+          reader.onloadend = (evt: any) => {
+            var imgBlob = new Blob([evt.target.result], { type: type });
+            this.inserUserIDNumberPasswordImage(imgBlob, this.userId)
+          }
+        })
+      })
+    }
+
+  }
+
   pickFileFromAndroidDevice() {
+    this.showError('Android.');
     this.fileChooser.open().then(uri => {
-      //this.file = uri;
+      this.showError(uri);
+      (<any>window).FilePath.resolveNativePath(uri, (result) => {
+        this.readimage(result);
+
+      });
     }).catch(error => {
       this.showError(error);
     });
@@ -154,30 +181,32 @@ export class ProfilePage {
   showError(str) {
     let toast = this.toast.create({
       message: str,
-      duration: 3000,
+      duration: 10000,
       position: 'top'
     });
     toast.present();
   }
 
   inserUserImage(file, userId) {
-    // Create a root reference
     var storageRef = firebase.storage().ref();
-
-
-    // Create a reference to 'images/mountains.jpg'
-    var mountainImagesRef = storageRef.child('IDNumberPassword/' + userId);
-    this.showError('Uploading');
-
-    mountainImagesRef.putString(file, 'data_url').then(function (snapshot) {
-      this.showError('Uploaded a base64 string!');
-      console.log('Uploaded a data_url string!');
+    var mountainImagesRef = storageRef.child('profileImages/' + userId);
+    mountainImagesRef.putString(file, 'data_url').then(snapshot => {
+      snapshot.ref.getDownloadURL().then(downloadURL => {
+        this.profilePicURL = downloadURL;
+        this.showError('Profile image is changed successful.');
+      });
     });
+
   }
 
   inserUserIDNumberPasswordImage(file, userId) {
-    var imageRef = this.storageRef.child('IDNumberPassword/' + userId);
-    imageRef.put(file).then(function (snapshot) { });
+    var storageRef = firebase.storage().ref();
+    var imageRef = this.storageRef.child('IDNumberPassport/' + userId);
+    imageRef.put(file).then(snapshot => {
+      this.user.uploadedIDNumberPassport = true;
+      this.showError('ID Number/ Passport image is changed successful.');
+      this.updateUser(false);
+    });
   }
 
 }

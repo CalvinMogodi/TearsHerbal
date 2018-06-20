@@ -7,7 +7,7 @@
 </ion-header>
 
 <ion-content padding class="background">
-    <ion-card *ngIf="step == 1">
+    <ion-card *ngIf="step == 1" style="border-radius: 15px">
         <form [formGroup]="signUpFirstForm">
             <ion-list>
                 <ion-item>
@@ -47,7 +47,7 @@
         </form>
     </ion-card>
 
-    <ion-card *ngIf="step == 2">
+    <ion-card *ngIf="step == 2" style="border-radius: 15px">
         <form [formGroup]="signUpSecondForm">
             <ion-list>
                 <ion-item>
