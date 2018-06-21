@@ -1,0 +1,25 @@
+<!--
+  Generated template for the OrderhistoryPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header transparent>
+  <ion-navbar transparent>
+    <ion-title>Order History</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="background">
+<ion-card style="border-radius: 15px">
+      <ion-card-content>        
+        <ion-spinner *ngIf="loading && historicOrders.length"></ion-spinner>
+        <ion-item-group *ngIf="historicOrders.length > 0">
+            <ion-item-divider *ngFor="let order of historicOrders" [value]="order.createdDate">order date:{{order.createdDate}} <br>quantity: {{order.quantity}}</ion-item-divider>
+        </ion-item-group>
+        <ion-item-group *ngIf="historicOrders.length == 0">
+            No Orders Found
+        </ion-item-group>
+      </ion-card-content>
+    </ion-card>
+</ion-content>

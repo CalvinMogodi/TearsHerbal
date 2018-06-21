@@ -18,25 +18,32 @@ export class MyApp {
   public displayname = 'Name Surname';
   id: any;
   userId: any;
+  public database: any;
   pages: Array<{title: string, component: any, icon: string, isActive: boolean}>;
   
-  constructor(public platform: Platform, public statusBar: StatusBar, 
-      public splashScreen: SplashScreen, public events: Events) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public events: Events) {
       events.subscribe("gotId", (uid)=>{
           this.id = uid;
       });
     this.initializeApp();  
-
+    
     var that = this;
+    this.database = firebase.database();
     firebase.auth().onAuthStateChanged( user => {
-      if(user){
-          let storageRef = firebase.storage().ref();
+      if(user){          
           this.userId = user.uid;
-         var starsRef = storageRef.child('profileImages/' + user.uid);        
-               starsRef.getDownloadURL().then( url => {
+          this.database.ref().child('users/' + user.uid).once('value', (snapshot)=>{
+            var user = snapshot.val();
+            if(user.uploadedProfileImage){
+              let storageRef = firebase.storage().ref();
+              var starsRef = storageRef.child('profileImages' + user.uid);        
+              starsRef.getDownloadURL().then( url => {
                     this.profilePicURL = url;
                 });
-        that.rootPage = HomePage;
+            }
+          });
+        //that.rootPage = HomePage;
+        //this.nav.setRoot(LoginPage);
         this.nav.setRoot(HomePage, {
                     userData: user.uid
                 });

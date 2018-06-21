@@ -40,7 +40,11 @@ export class RegisterPage {
         isActive: false,
         points: 0,
         displayName: '',
-        uploadedIDNumberPassport: false
+        uploadedIDNumberPassport: false,
+        uploadedProfileImage: false,
+        uploadedPOP: false,
+        createdDate: 0,
+        changedPassword: true
     }
     selectImagePath = 'assets/imgs/ic_person_black.png';
     public step = 1;
@@ -97,7 +101,7 @@ var s = 0;
     }
 
     removeFocus(){
-var s = 0;
+        var s = 0;
     }
     
     addNote(item){
@@ -106,18 +110,31 @@ var s = 0;
         this.account.referredBy = item.key;
         this.peoples = [];
     }
+
+    dateToTimestamp(strDate){
+        var datum = Date.parse(strDate);
+        return datum/1000;
+    }
+
+    getRandom(length) {
+        return Math.floor(Math.pow(10, length-1) + Math.random() * 9 * Math.pow(10, length-1));
+    }
+
     signUp() {
-          this.showError = false;
-         this.message = '';
+        this.showError = false;
+        this.message = '';
         this.secondSubmitAttempt = true;
-        if(true){
-        //if (this.signUpSecondForm.valid) {
+        if(this.signUpSecondForm.valid){
             var loader = this.loadingCtrl.create({
                 content: "Please wait..."
             });
 
             loader.present();
+            var timestamp = this.dateToTimestamp(new Date().toString());
+            this.account.createdDate = timestamp;
             this.account.displayName = this.account.name + ' ' + this.account.surname;
+            this.account.password = '',
+            this.account.confirmPassword = '',
             this.userService.signUpUser(this.account).then(authData => {
                 loader.dismiss();
                 let toast = this.toastCtrl.create({

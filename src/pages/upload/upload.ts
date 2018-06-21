@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
-import { File } from '@ionic-native/file';
-import { LoadingController } from 'ionic-angular';
-import { UserserviceProvider } from '../../providers/userservice/userservice';
-import { AwaitingApprovalPage } from '../awaitingapproval/awaitingapproval';
+import { IonicPage, NavController, NavParams, Platform, ToastController, LoadingController } from 'ionic-angular';
+import { FileChooser } from '@ionic-native/file-chooser';
+import { IOSFilePicker } from '@ionic-native/file-picker';
 
 /**
  * Generated class for the UploadPage page.
@@ -19,59 +16,105 @@ import { AwaitingApprovalPage } from '../awaitingapproval/awaitingapproval';
   templateUrl: 'upload.html',
 })
 export class UploadPage {
-  showUploadButton = true;
   uid: any;
-  files =
-  [
-    {
-      name: "mash.pdf"
-    },
-    {
-      name: "Once an Addict.mp3"
-    },
-    {
-      name: "shudu?.pdf"
-    }
-  ];
-
-  rootDirectory = 'file:///';
-
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-    public fileNavigator: File, public loadingCtrl: LoadingController, public userService: UserserviceProvider) {
+  loader: any;
+  constructor(public platform: Platform, private fileChooser: FileChooser, public iosFilePicker: IOSFilePicker, public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,public toast: ToastController) {
     this.uid = navParams.get('userData');
 
   }
 
-  listDirectories() {
-    this.showUploadButton = false;
-    /* this.fileNavigator.listDir(this.rootDirectory, '').then((data)=>
-       {
-           this.files = data;
-       }); */
-  }
-
-  uploadDocument() {
-    let loader = this.loadingCtrl.create({
-      content: "uploading...",
-    });
-
-    loader.present();
-    this.userService.userHasUploadedPOP(this.uid).then(authData => {
-      setTimeout(() => {
-        loader.dismiss();
-        this.showUploadButton = true;
-      }, 3000);
-      this.navCtrl.setRoot(AwaitingApprovalPage, {
-        userData: this.uid
-      });
-    });
-
-
-
+  uploadDocument() {    
+    if (this.platform.is('ios')) {
+      this.pickFileFromIOSDevice();
+    }
+    else if (this.platform.is('android')) {
+      this.pickFileFromAndroidDevice();
+    }
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad UploadPage');
+  }
+
+   pickFileFromIOSDevice() {
+    this.iosFilePicker.pickFile().then(uri => {
+      this.loader = this.loadingCtrl.create({
+      content: "uploading...",
+    });
+    this.loader.present();
+        (<any>window).FilePath.resolveNativePath(uri, (result) => {
+        this.readimage(result);
+      });
+      }).catch(error => {
+        this.showError(error);
+      });
+  }
+
+  getfileext(filestring) {
+    let file = filestring.substr(filestring.lastIndexOf('.') + 1);
+    return file.toLowerCase();
+  }
+
+  readimage(result) {
+    var type = '';    
+    if (this.getfileext(result) == 'pdf') {
+      var type = 'application/pdf';
+    } else if (this.getfileext(result) == 'jpeg' || this.getfileext(result) == 'png' || this.getfileext(result) == 'jpg') {
+      var type = 'image/jpeg';
+    }
+    if (type == '') { 
+      this.showError('You can only upload PDF or image');    }    
+    else {
+     (<any>window).resolveLocalFileSystemURL(result, (res) => {
+        res.file((resFile) => {
+          var reader = new FileReader();
+          reader.readAsArrayBuffer(resFile);
+          reader.onloadend = (evt: any) => {
+            var imgBlob = new Blob([evt.target.result], { type: type });
+            this.inserUserIDNumberPasswordImage(imgBlob, this.uid)
+          }
+        })
+      })
+    }
+  }
+
+  pickFileFromAndroidDevice() {
+    this.fileChooser.open().then(uri => {
+      this.loader = this.loadingCtrl.create({
+      content: "uploading...",
+    });
+    this.loader.present();
+      (<any>window).FilePath.resolveNativePath(uri, (result) => {
+        this.readimage(result);
+      });
+    }).catch(error => {
+      this.showError(error);
+    });
+  }
+
+  showError(str) {
+    let toast = this.toast.create({
+      message: str,
+      duration: 10000,
+      position: 'top'
+    });
+    toast.present();
+  }
+
+  inserUserIDNumberPasswordImage(file, userId) {
+    var storageRef = firebase.storage().ref();
+    var imageRef = storageRef.child('ProofOfPayment/' + userId);
+    imageRef.put(file).then(snapshot => {
+      this.showError('Proof of payment is successful.');
+      this.updateUser();
+       this.loader.dismiss();
+    });
+  }
+
+  updateUser() {
+    var updates = {};
+    updates['users/' + this.uid + '/uploadedPOP'] = true;
+    firebase.database().ref().update(updates);
   }
 
 }

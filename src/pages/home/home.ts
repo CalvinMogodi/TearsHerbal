@@ -1,7 +1,8 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NavController, NavParams, Events ,MenuController} from 'ionic-angular';
+import { NavController, NavParams, Events} from 'ionic-angular';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { OrderPage } from '../order/order';
+import { OrderhistoryPage } from '../orderhistory/orderhistory';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase'
@@ -18,8 +19,10 @@ export class HomePage {
   public points: any;
   public usersUnderMe = [];
   public loading = true;
+  public loadingOrders = true;
+  public loadingPoints = true;
   
-  constructor(private menu: MenuController,public userService: UserserviceProvider,public navCtrl: NavController, 
+  constructor(public userService: UserserviceProvider,public navCtrl: NavController, 
                 public navParams: NavParams, public storage: Storage,
                 public events: Events)
   {
@@ -37,7 +40,7 @@ export class HomePage {
             }else{
                 this.points = 0;
             }           
-            
+            this.loadingPoints = false;
         });
     
     //get number of orders placed
@@ -55,7 +58,7 @@ export class HomePage {
          }
          else
             this.numOfOrders = 0;
-         
+         this.loadingOrders = false;
      });
      
      //get people under user
@@ -83,15 +86,20 @@ export class HomePage {
   }
 
   ionViewDidEnter() {
-    this.menu.swipeEnable(false);
-
     // If you have more than one side menu, use the id like below
     // this.menu.swipeEnable(false, 'menu1');
   }
 
-  public viewOrders()
+  public placeAnOrder()
   {
     this.navCtrl.push(OrderPage, {
+        userData2: this.uid
+    });
+  }
+
+  public viewOrders()
+  {
+    this.navCtrl.push(OrderhistoryPage, {
         userData2: this.uid
     });
   }

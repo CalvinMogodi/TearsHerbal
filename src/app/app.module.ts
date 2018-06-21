@@ -19,9 +19,10 @@ import { TermsandconditionsPage } from '../pages/termsandconditions/termsandcond
 import { RegisterPage } from '../pages/register/register';
 import { UploadPage } from '../pages/upload/upload';
 import { OrderPage } from '../pages/order/order';
+import { OrderhistoryPage } from '../pages/orderhistory/orderhistory';
 import { CartPage } from '../pages/cart/cart';
 import { ProfilePage } from '../pages/profile/profile';
-//import { AwaitingApprovalPage } from '../pages/awaitingapproval/awaitingapproval';
+import { AwaitingApprovalPage } from '../pages/awaitingapproval/awaitingapproval';
 
 import * as firebase from 'firebase'
 import { StatusBar } from '@ionic-native/status-bar';
@@ -52,8 +53,9 @@ firebase.initializeApp(firebaseConfig);
     CartPage,
     ProfilePage,
     ForgotpasswordPage,
-    TermsandconditionsPage
-    //AwaitingApprovalPage
+    TermsandconditionsPage,
+    AwaitingApprovalPage,
+    OrderhistoryPage
   ],
   imports: [
     BrowserModule,
@@ -77,8 +79,9 @@ firebase.initializeApp(firebaseConfig);
     CartPage,
     ProfilePage,
     ForgotpasswordPage,
-    TermsandconditionsPage
-    //AwaitingApprovalPage
+    TermsandconditionsPage,
+    AwaitingApprovalPage,
+    OrderhistoryPage
   ],
   providers: [
     StatusBar,

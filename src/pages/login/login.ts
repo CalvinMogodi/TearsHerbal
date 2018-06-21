@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, ToastController, LoadingController, Loading, MenuController } from 'ionic-angular';
 import { RegisterPage } from '../register/register';
 import { HomePage } from '../home/home';
-//import { AwaitingApprovalPage } from '../awaitingapproval/awaitingapproval';
+import { AwaitingApprovalPage } from '../awaitingapproval/awaitingapproval';
 import { UploadPage } from '../upload/upload';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
 import { ForgotpasswordPage } from '../forgotpassword/forgotpassword';
@@ -71,7 +71,7 @@ export class LoginPage {
             this.userService.setUid(authData.uid);
             var test = this.userService.getUid();
             
-            if(user.isActive == true)
+            if(user.isActive)
             {
                 /*this.http.get('http://localhost/api/sms/send').map(res => res.json())
                             .subscribe(data=>{
@@ -82,20 +82,16 @@ export class LoginPage {
                     userData: test
                 });
             }
-            /*else if(user.hasUploadedPOP == true){
+            else if(user.uploadedPOP){
               loader.dismiss();
-                this.navCtrl.setRoot(AwaitingApprovalPage, {
+                this.navCtrl.push(AwaitingApprovalPage, {
                     userData: authData.uid
                 });              
-            }*/
+            }
             else
             {
-                 loader.dismiss();
-                 this.navCtrl.setRoot(UploadPage, {
-                    userData: authData.uid
-                });
                loader.dismiss();
-               this.navCtrl.setRoot(UploadPage, {
+               this.navCtrl.push(UploadPage, {
                     userData: authData.uid
                 });                
             }

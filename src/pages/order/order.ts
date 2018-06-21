@@ -21,7 +21,6 @@ export class OrderPage {
     public database: any;
     public availableStock: any;
     public showButton = false
-    public historicOrders = [];
     public loading = true;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
@@ -37,31 +36,6 @@ export class OrderPage {
                    this.availableStock = snapshot.val();
                    this.showButton = true;
                });
-               
-            //get historic data
-            var refForHistoricData = this.database.ref();
-            refForHistoricData.child('orders').orderByChild('userId').equalTo(this.uid).on('value', (snapshot)=>{
-        //this.database.ref('orders').orderByValue().once('value', (snapshot) =>{
-
-           var test = snapshot.val();
-           if(test != null)
-           {
-              this.storage.set("id2", test);
-              let t = [];
-              snapshot.forEach(snap =>{
-                  this.historicOrders.push(snap.val());
-
-              });
-              
-              this.loading = false;
-           }
-           else
-           {
-                this.loading = false;
-           }
-
-        });
-              
   }
 
   ionViewDidLoad() {

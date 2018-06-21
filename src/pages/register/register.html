@@ -50,16 +50,6 @@
     <ion-card *ngIf="step == 2" style="border-radius: 15px">
         <form [formGroup]="signUpSecondForm">
             <ion-list>
-                <!--<ion-item>
-                  <ion-label>Referred By</ion-label>
-                    <ion-select [(ngModel)]="account.referredBy" [ngModelOptions]="{standalone: true}" >
-                        <ion-option *ngFor="let people of peoples" [value]="people.key">{{people.name}}</ion-option>
-                    </ion-select>
-                </ion-item>
-                <ion-item>
-                    <ion-label floating>Referred By</ion-label>
-                    <ion-input [(ngModel)]="account.referredBy" formControlName="referredBy" [class.invalid]="!signUpSecondForm.controls.referredBy.valid && (signUpSecondForm.controls.referredBy.dirty || secondSubmitAttempt)" type="text"></ion-input>
-                </ion-item>-->
                 <ion-item>
                     <div class="autocomplete">
 	<ion-searchbar [(ngModel)]="referredBy" formControlName="referredBy" 

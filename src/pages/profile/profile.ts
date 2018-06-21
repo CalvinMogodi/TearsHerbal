@@ -124,13 +124,11 @@ export class ProfilePage {
   }
 
   pickFileFromIOSDevice() {
-    this.iosFilePicker.pickFile()
-      .then(
-      uri => {
-        //var ef = this.file.getFile(uri, '',true);        
-      }
-      )
-      .catch(error => {
+    this.iosFilePicker.pickFile().then(uri => {
+        (<any>window).FilePath.resolveNativePath(uri, (result) => {
+        this.readimage(result);
+      });
+      }).catch(error => {
         this.showError(error);
       });
   }
@@ -141,8 +139,7 @@ export class ProfilePage {
   }
 
   readimage(result) {
-    var type = '';
-    
+    var type = '';    
     if (this.getfileext(result) == 'pdf') {
       var type = 'application/pdf';
     } else if (this.getfileext(result) == 'jpeg' || this.getfileext(result) == 'png' || this.getfileext(result) == 'jpg') {
@@ -162,16 +159,12 @@ export class ProfilePage {
         })
       })
     }
-
   }
 
   pickFileFromAndroidDevice() {
-    this.showError('Android.');
     this.fileChooser.open().then(uri => {
-      this.showError(uri);
       (<any>window).FilePath.resolveNativePath(uri, (result) => {
         this.readimage(result);
-
       });
     }).catch(error => {
       this.showError(error);

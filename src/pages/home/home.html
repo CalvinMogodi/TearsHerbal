@@ -1,74 +1,65 @@
-
-
-<ion-header style="background-color: #FFFFFF !important;">
-  <ion-navbar>
-    <button ion-button menuToggle>
+<ion-header transparent>
+    <ion-navbar transparent>
+        <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-      <ion-title  style="margin-left: 30%;">
-        <img width="50" height="50" src="assets/imgs/Teras_Herbal_Juice_Logo.png">
-      </ion-title>
-  </ion-navbar>
+        <ion-title style="margin-left: 30%;">
+            <img width="50" height="50" src="assets/imgs/Teras_Herbal_Juice_Logo.png">
+        </ion-title>
+    </ion-navbar>
 </ion-header>
-<ion-content style="background-color: #edeaea" padding-right>
-    <ion-grid>
+<ion-content class="background" padding>
+    <ion-row style="margin-top: -10px;">
+        <ion-col>
+            <ion-fab left top>
+                <button (click)="placeAnOrder()" ion-fab outline color="primary"><ion-icon name="add"></ion-icon></button>
+            </ion-fab>
+        </ion-col>
+        <ion-col style="margin-left: -195px;margin-top: 35px;">
+            <label>Place An Order</label>
+        </ion-col>
+    </ion-row>
+
+    <ion-card style="border-radius: 65px 0px 0px;">
+        <ion-card-header class="card-header">
+            Orders
+        </ion-card-header>
+        <ion-card-content style="float: right">
+            <ion-spinner style="margin-left: -30px;margin-bottom: -19px;" *ngIf="loadingOrders"></ion-spinner>
+            <b>{{numOfOrders}}</b> Pending Payment<br>
+            <b>{{numOfOrders}}</b> Awaiting Approval<br>
+        </ion-card-content>
         <ion-row>
-            <ion-col s6>
-                <ion-card style="border-radius:5px;width:100%;height:100px">
-                    <ion-card-header>
-
-                    </ion-card-header>
-                    <ion-card-content>
-                        <ion-icon name="star" color="yellow" style="color:yellow"></ion-icon>
-                        {{points}} points <br>
-                        <div style="text-align: center">
-                            <button ion-button color="secondary" style="font-size: 5pt" round>view</button>
-                        </div>
-                    </ion-card-content>
-                </ion-card>
-            </ion-col>
-            <ion-col s6>
-                <ion-card style="border-radius:5px;width:100%;height:100px">
-                    <ion-card-header>
-
-                    </ion-card-header>
-                    <ion-card-content>
-                        <ion-icon name="basket" color="primary"></ion-icon>
-                        {{numOfOrders}} orders <br>
-                        <div style="text-align: center">
-                            <button (click)="viewOrders()" ion-button color="secondary" style="font-size: 5pt" round>view</button>
-                        </div>
-                    </ion-card-content>
-                </ion-card>
+            <ion-col>
+                <button class="icon-btn" (click)="viewOrders()" ion-button icon-start clear small>
+                    <ion-icon name="basket"></ion-icon>                   
+                    <div style="margin-top: 5px;">View Orders</div>
+                </button>
             </ion-col>
         </ion-row>
-        <ion-row>
-            <ion-col s12>
-                <ion-card class=" cards-bg" style="border-radius:5px;width:100%;height:100%">
-                    <ion-card-header>
-                        <div>
-                            <ion-grid>
-                                <ion-row>
-                                    <ion-col s6>
-                                        <ion-icon name="people" color="primary"></ion-icon>
-                                     My People
-                                    </ion-col>
-                                    <ion-col s6>
-                                        <button ion-button color="secondary" style="font-size: 5pt;margin-top:-10px;width:100%" round>view</button>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-grid>
-                        </div>
-                    </ion-card-header>
-                    <ion-card-content>
-                        <ion-spinner *ngIf="usersUnderMe.length <= 0 && loading"></ion-spinner>
-                        <ion-item-group *ngIf="usersUnderMe.length > 0">
-                            <ion-item-divider *ngFor="let people of usersUnderMe" [value]="people.name">{{people.name + " " + people.surname}}</ion-item-divider>
-                        </ion-item-group>
-                        <p *ngIf="usersUnderMe.length <= 0 && !loading">no users</p>
-                    </ion-card-content>
-                </ion-card>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+    </ion-card>
+
+    <ion-card style="border-radius: 0px 0px 60px 0px;">
+        <ion-card-header>
+            Points
+        </ion-card-header>
+        <ion-card-content style="margin-top: -5px;">
+            <ion-icon name="star" color="yellow" style="color:yellow"></ion-icon>
+            <b>{{points}}</b>
+            <ion-spinner style="margin-bottom: -5px;" *ngIf="loadingPoints"></ion-spinner> Available Points<br>
+        </ion-card-content>
+    </ion-card>
+    <ion-card style="text-align: center; border-radius: 5px">
+        <ion-card-header>
+            <ion-icon name="people" color="primary"></ion-icon>
+            My People
+        </ion-card-header>
+        <ion-card-content>
+            <ion-spinner *ngIf="usersUnderMe.length <= 0 && loading"></ion-spinner>
+            <ion-item-group *ngIf="usersUnderMe.length > 0">
+                <ion-item-divider *ngFor="let people of usersUnderMe" [value]="people.name">{{people.name + " " + people.surname}}</ion-item-divider>
+            </ion-item-group>
+            <p *ngIf="usersUnderMe.length <= 0 && !loading">no users</p>
+        </ion-card-content>
+    </ion-card>
 </ion-content>
