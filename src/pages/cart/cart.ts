@@ -59,7 +59,8 @@ export class CartPage {
         monthId: new Date().getMonth() + 1,
         uploadedPOP: false,
         user: '',
-        reference: ''
+        reference: '',
+        orderNumber: 0
     }
 
     public cardDetails =
@@ -71,7 +72,6 @@ export class CartPage {
     };
 
     public database: any;
-    public stock: any;
     public showSpinner: any;
     public showAddress = false;
     public showPaymentForm = false;
@@ -82,18 +82,16 @@ export class CartPage {
     public unitsBoughtThisMonth = 0;
     public price: 0;
 
-    constructor(private storage: Storage, public navCtrl: NavController,public navParams: NavParams, public http: Http, public userService: UserserviceProvider, public toast: ToastController) {
-        
+    constructor(private storage: Storage, public navCtrl: NavController, public navParams: NavParams, public http: Http, public userService: UserserviceProvider, public toast: ToastController) {
+
         this.order.userId = navParams.get('userData5');
         this.userId = navParams.get('userData5');
         this.price = navParams.get('price');
-        this.stock = navParams.get('availableStock');
         this.database = firebase.database();
         var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth() + 1; //January is 0!
         var yyyy = today.getFullYear();
-
         var date = dd + '-' + mm + '-' + yyyy;
 
         //this.order.createdDate = date;
@@ -106,10 +104,12 @@ export class CartPage {
         endSearchString = endSearchString + today.getMonth() + 1 + '-';
         endSearchString = endSearchString + today.getFullYear();
 
-        this.database.ref().child('orders').orderByChild('monthId')
+      /*  this.database.ref().child('orders').orderByChild('monthId')
             .equalTo(today.getMonth() + 1).once('value', (snapshot) => {
                 snapshot.forEach(snap => {
                     var order = snap.val()
+                    let date = new Date(this.timeConverter(order.createdDate));
+                    let monthId = date.getMonth;
                     if (order.userId == this.userId
                         && order.createdDate.substring(4, order.createdDate.length - 1)) {
                         this.unitsBoughtThisMonth += Number(order.quantity);
@@ -118,9 +118,7 @@ export class CartPage {
 
                 if (this.unitsBoughtThisMonth >= 5)
                     this.paymentMethods.push("Points");
-
-
-            });
+            });*/
 
         this.database.ref().child('users/' + this.userId).once('value', (snapshot) => {
             this.user = snapshot.val();
@@ -144,8 +142,8 @@ export class CartPage {
         //this.setupStripe();
     }
 
-    timeConverter(UNIX_timestamp) {
-        var a = new Date(UNIX_timestamp * 1000);
+    timeConverter(timestamp) {
+        var a = new Date(timestamp * 1000);
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var year = a.getFullYear();
         var month = months[a.getMonth()];
@@ -255,66 +253,62 @@ export class CartPage {
         form.addEventListener('submit', event => {
             event.preventDefault();
 
-            if (this.order.quantity < this.stock) {
-                var text = "";
-                var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
-                var len = 5;
+            var text = "";
+            var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+            var len = 5;
 
-                for (var i = 0; i < len; i++)
-                    text += charset.charAt(Math.floor(Math.random() * charset.length));
+            for (var i = 0; i < len; i++)
+                text += charset.charAt(Math.floor(Math.random() * charset.length));
 
-                this.order.reference = text;
+            this.order.reference = text;
 
-                var newOrder = this.database.ref('orders').push();
-                newOrder.set(this.order, done => {
-                    //update count
-                    var newStock = this.database.ref('avaliableStock')
-                        .set(this.stock - Number(this.order.quantity), done2 => {
-                            //update points
-                            this.database.ref().child('users/' + this.userId).once('value', (snapshot) => {
-                                this.user = snapshot.val();
+            var newOrder = this.database.ref('orders').push();
+            newOrder.set(this.order, done => {
+                //update points
+                this.database.ref().child('users/' + this.userId).once('value', (snapshot) => {
+                    this.user = snapshot.val();
 
-                                this.user.points = this.user.points + (30 * this.order.quantity);
-                                this.database.ref().child('users/' + this.userId)
-                                    .update(this.user);
+                    this.user.points = this.user.points + (30 * this.order.quantity);
+                    this.database.ref().child('users/' + this.userId)
+                        .update(this.user);
 
-                            });
-                            this.stripe.createToken(this.card).then(result => {
-                                if (result.error) {
-                                    var errorElement = document.getElementById('card-errors');
-                                    errorElement.textContent = result.error.message;
-                                } else {
-                                    console.log(result);
-
-                                    this.data = result;
-                                    //go to api with result.token.id
-                                    this.http.get('http://localhost/api/charge').map(res => res.json())
-                                        .subscribe(data => {
-
-                                        });
-                                }
-                            });
-
-                            let toast = this.toast.create({
-                                message: 'Order placed successfuly',
-                                duration: 3000,
-                                position: 'top'
-                            });
-
-                            toast.onDidDismiss(() => {
-                                this.navCtrl.setRoot(HomePage, { userData: this.order.userId })
-                            });
-
-                            toast.present();
-                        });
                 });
-            }
+                this.stripe.createToken(this.card).then(result => {
+                    if (result.error) {
+                        var errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = result.error.message;
+                    } else {
+                        console.log(result);
+
+                        this.data = result;
+                        //go to api with result.token.id
+                        this.http.get('http://localhost/api/charge').map(res => res.json())
+                            .subscribe(data => {
+
+                            });
+                    }
+                });
+
+                let toast = this.toast.create({
+                    message: 'Order placed successfuly',
+                    duration: 3000,
+                    position: 'top'
+                });
+
+                toast.onDidDismiss(() => {
+                    this.navCtrl.setRoot(HomePage, { userData: this.order.userId })
+                });
+
+                toast.present();
+
+            });
+
             // this.stripe.createToken(this.card)
 
         });
     }
 
-    dismiss(){
+    dismiss() {
         this.navCtrl.setRoot(HomePage, { userData: this.order.userId })
     }
 
@@ -337,7 +331,7 @@ export class CartPage {
         //generate reference
         var text = "";
         var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
-        var len = 5;
+        var len = 7;
 
         for (var i = 0; i < len; i++)
             text += charset.charAt(Math.floor(Math.random() * charset.length));
@@ -348,8 +342,13 @@ export class CartPage {
         this.order.user = this.user.name + " " + this.user.surname;
         this.order.reference = text;
         this.order.createdDate = this.toTimestamp(new Date().toString());
+        let orderCountRef = firebase.database().ref('staticData/orderCount');
+        orderCountRef.orderByValue().once("value", total => {
+        let newTotal = Number(total.val()) + 1;
+        this.order.orderNumber = newTotal;
         newOrder.set(this.order, done => {
             //make payment
+             this.updateOrderCount(this.order.orderNumber);
             var headers = new Headers();
             headers.append("Accept", 'application/json');
             headers.append('Content-Type', 'application/x-www-form-urlencoded');
@@ -366,35 +365,47 @@ export class CartPage {
                     var breakeHere = "";
                 });
         });
+        });
     }
 
-    dateToTimestamp(strDate){
+    dateToTimestamp(strDate) {
         var datum = Date.parse(strDate);
-        return datum/1000;
+        return datum / 1000;
     }
+
+    updateOrderCount(total) {
+        var updates = {};
+        updates['staticData/orderCount/'] = total;
+        firebase.database().ref().update(updates);
+    }
+
 
     placeOrder() {
         this.showSpinner = true;
         this.storage.set("id4", this.order);
         if (this.order.paymentMethod == 'Deposit') {
-            if (this.order.quantity < this.stock) {
-                //generate reference
-                var text = "";
-                var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
-                var len = 5;
+            //generate reference
+            var text = "";
+            var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+            var len = 5;
 
-                for (var i = 0; i < len; i++)
-                    text += charset.charAt(Math.floor(Math.random() * charset.length));
+            for (var i = 0; i < len; i++)
+                text += charset.charAt(Math.floor(Math.random() * charset.length));
 
-                this.order.reference = text;
+            this.order.reference = text;
 
-                var newOrder = this.database.ref('orders').push();
-                this.order.user = this.user.name + " " + this.user.surname;
-                this.order.reference = text;
-                var timestamp = this.dateToTimestamp(new Date().toString());
-                this.order.createdDate = timestamp;
+            var newOrder = this.database.ref('orders').push();
+            this.order.user = this.user.name + " " + this.user.surname;
+            this.order.reference = text;
+            var timestamp = this.dateToTimestamp(new Date().toString());
+            this.order.createdDate = timestamp;
+            let orderCountRef = firebase.database().ref('staticData/orderCount');
+            orderCountRef.orderByValue().once("value", total => {
+                let newTotal = Number(total.val()) + 1;
+                this.order.orderNumber = newTotal;
                 newOrder.set(this.order, done => {
                     //send sms with reference
+                    this.updateOrderCount(this.order.orderNumber);
                     var headers = new Headers();
                     headers.append("Accept", 'application/json');
                     headers.append('Content-Type', 'application/x-www-form-urlencoded');
@@ -410,33 +421,31 @@ export class CartPage {
                         .subscribe(data => {
                             var breakeHere = "";
                         });
-                    //update count
-                    var newStock = this.database.ref('avaliableStock')
-                        .set(this.stock - Number(this.order.quantity), done2 => {
-                            //update points
-                            this.database.ref().child('users/' + this.userId).once('value', (snapshot) => {
-                                this.user = snapshot.val();
+                    //update points
+                    this.database.ref().child('users/' + this.userId).once('value', (snapshot) => {
+                        this.user = snapshot.val();
 
-                                this.user.points = this.user.points + (30 * this.order.quantity);
-                                this.database.ref().child('users/' + this.userId)
-                                    .update(this.user);
+                        this.user.points = this.user.points + (30 * this.order.quantity);
+                        this.database.ref().child('users/' + this.userId)
+                            .update(this.user);
 
-                            });
+                    });
 
-                            let toast = this.toast.create({
-                                message: 'Order placed successfuly',
-                                duration: 3000,
-                                position: 'top'
-                            });
+                    let toast = this.toast.create({
+                        message: 'Order placed successfuly',
+                        duration: 3000,
+                        position: 'top'
+                    });
 
-                            toast.onDidDismiss(() => {
-                                this.navCtrl.setRoot(HomePage, { userData: this.order.userId })
-                            });
+                    toast.onDidDismiss(() => {
+                        this.navCtrl.setRoot(HomePage, { userData: this.order.userId })
+                    });
 
-                            toast.present();
-                        });
+                    toast.present();
+
                 });
-            }
+            });
+
         }
         else if (this.order.paymentMethod == 'Card') {
             this.showPaymentForm = true;
@@ -444,67 +453,71 @@ export class CartPage {
         }
         else if (this.order.paymentMethod == 'Points') {
 
-            if (this.order.quantity < this.stock) {
-                this.database.ref().child('users/' + this.userId)
-                    .once('value', (snapshot) => {
-                        var userToProcess = snapshot.val();
-                        if (userToProcess.points >= this.price * Number(this.order.quantity)) {
-                            var text = "";
-                            var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
-                            var len = 5;
+            this.database.ref().child('users/' + this.userId)
+                .once('value', (snapshot) => {
+                    var userToProcess = snapshot.val();
+                    if (userToProcess.points >= this.price * Number(this.order.quantity)) {
+                        var text = "";
+                        var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+                        var len = 5;
 
-                            for (var i = 0; i < len; i++)
-                                text += charset.charAt(Math.floor(Math.random() * charset.length));
+                        for (var i = 0; i < len; i++)
+                            text += charset.charAt(Math.floor(Math.random() * charset.length));
 
-                            this.order.reference = text;
-                            //proceed with payment
-                            var newOrder = this.database.ref('orders').push();
+                        this.order.reference = text;
+                        //proceed with payment
+                        var newOrder = this.database.ref('orders').push();
+                        let orderCountRef = firebase.database().ref('staticData/orderCount');
+                        orderCountRef.orderByValue().on("value", total => {
+                            let newTotal = Number(total) + 1;
+                            this.order.orderNumber = newTotal;
+
                             newOrder.set(this.order, done => {
                                 //update count
-                                var newStock = this.database.ref('avaliableStock')
-                                    .set(this.stock - Number(this.order.quantity), done2 => {
-                                        //update points
-                                        this.database.ref().child('users/' + this.userId).once('value', (snapshot) => {
-                                            this.user = snapshot.val();
+                                this.updateOrderCount(this.order.orderNumber);
+                                //update points
+                                this.database.ref().child('users/' + this.userId).once('value', (snapshot) => {
+                                    this.user = snapshot.val();
 
-                                            this.user.points = this.user.points - this.price * Number(this.order.quantity);
-                                            this.database.ref().child('users/' + this.userId)
-                                                .update(this.user);
+                                    this.user.points = this.user.points - this.price * Number(this.order.quantity);
+                                    this.database.ref().child('users/' + this.userId)
+                                        .update(this.user);
 
-                                        });
+                                });
 
-                                        let toast = this.toast.create({
-                                            message: 'Order placed successfuly',
-                                            duration: 3000,
-                                            position: 'top'
-                                        });
+                                let toast = this.toast.create({
+                                    message: 'Order placed successfuly',
+                                    duration: 3000,
+                                    position: 'top'
+                                });
 
-                                        toast.onDidDismiss(() => {
-                                            this.navCtrl.setRoot(HomePage, { userData: this.order.userId })
-                                        });
+                                toast.onDidDismiss(() => {
+                                    this.navCtrl.setRoot(HomePage, { userData: this.order.userId })
+                                });
 
-                                        toast.present();
-                                    });
+                                toast.present();
                             });
-                        }
-                        else {
-                            //not enough points
-                            let toast = this.toast.create({
-                                message: 'You do not haven enough points.\n\
+
+                        })
+                    }
+                    else {
+                        //not enough points
+                        let toast = this.toast.create({
+                            message: 'You do not haven enough points.\n\
                                         Please select a different method.',
-                                duration: 3000,
-                                position: 'top'
-                            });
+                            duration: 3000,
+                            position: 'top'
+                        });
 
-                            toast.onDidDismiss(() => {
-                                this.showSpinner = false;
-                            });
+                        toast.onDidDismiss(() => {
+                            this.showSpinner = false;
+                        });
 
-                            toast.present();
+                        toast.present();
 
-                        }
-                    });
-            }
+                    }
+                });
+
         }
 
     }

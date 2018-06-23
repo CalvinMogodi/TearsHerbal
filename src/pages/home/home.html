@@ -1,37 +1,31 @@
 <ion-header transparent>
     <ion-navbar transparent>
-        <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
+       <button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
     </button>
         <ion-title style="margin-left: 30%;">
-            <img width="50" height="50" src="assets/imgs/Teras_Herbal_Juice_Logo.png">
+            <img width="50" height="50" src="assets/imgs/teras_logo.png">
         </ion-title>
+       <ion-buttons end>
+      <button ion-button icon-only (click)="placeAnOrder()" color="royal">
+        <ion-icon name="add"><label style="font-size: 12px"> Order</label></ion-icon>
+      </button>
+    </ion-buttons>
     </ion-navbar>
 </ion-header>
-<ion-content class="background" padding>
-    <ion-row style="margin-top: -10px;">
-        <ion-col>
-            <ion-fab left top>
-                <button (click)="placeAnOrder()" ion-fab outline color="primary"><ion-icon name="add"></ion-icon></button>
-            </ion-fab>
-        </ion-col>
-        <ion-col style="margin-left: -195px;margin-top: 35px;">
-            <label>Place An Order</label>
-        </ion-col>
-    </ion-row>
-
-    <ion-card style="border-radius: 65px 0px 0px;">
+<ion-content class="background" padding> 
+    <ion-card style="border-radius: 65px 0px 0px;margin-top: 0px;">
         <ion-card-header class="card-header">
             Orders
         </ion-card-header>
         <ion-card-content style="float: right">
             <ion-spinner style="margin-left: -30px;margin-bottom: -19px;" *ngIf="loadingOrders"></ion-spinner>
             <label (click)="viewOrders('Pending Payment')"> <b>{{numOfPendingPaymentOrders}}</b> Pending Payment</label><br>
-            <label (click)="viewOrders('Awiating Approvel')"><b>{{numOfAwiatingApprovelOrders}}</b> Awaiting Approval</label><br>
+            <label (click)="viewOrders('Awaiting Approval')"><b>{{numOfAwiatingApprovelOrders}}</b> Awaiting Approval</label><br>
         </ion-card-content>
         <ion-row>
             <ion-col>
-                <button class="icon-btn" (click)="viewOrders('previous')" ion-button icon-start clear small>
+                <button class="icon-btn" (click)="viewOrders('Order History')" ion-button icon-start clear small>
                     <ion-icon name="basket"></ion-icon>                   
                     <div style="margin-top: 5px;">View Previous Orders</div>
                 </button>

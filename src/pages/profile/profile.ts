@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform,ToastController, ActionSheetController  } from 'ionic-angular';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
 import { FileChooser } from '@ionic-native/file-chooser';
 import { IOSFilePicker } from '@ionic-native/file-picker';
-import { ToastController, ActionSheetController } from 'ionic-angular';
 import { File } from '@ionic-native/file';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { FilePath } from '@ionic-native/file-path';
@@ -36,8 +35,8 @@ export class ProfilePage {
       Storage, public toast: ToastController, public File: File, private filePath: FilePath, public actionSheetCtrl: ActionSheetController, private base64: Base64) {
 
     this.userId = navParams.get('profileId');
-    let storageRef = firebase.storage().ref();
-    var starsRef = storageRef.child('profileImages/' + this.userId);
+    this.storageRef = firebase.storage().ref();
+    var starsRef = this.storageRef.child('profileImages/' + this.userId);
     starsRef.getDownloadURL().then(url => {
       this.profilePicURL = url;
     });
@@ -45,8 +44,7 @@ export class ProfilePage {
 
     var test = this.userserviceProvider.getUid();
     var id = null;
-    this.database = firebase.database();
-    this.storageRef = firebase.storage().ref();
+    this.database = firebase.database();    
 
     //get user by uid
     this.database.ref().child('users/' + this.userId).once('value', (snapshot) => {
@@ -181,8 +179,7 @@ export class ProfilePage {
   }
 
   inserUserImage(file, userId) {
-    var storageRef = firebase.storage().ref();
-    var mountainImagesRef = storageRef.child('profileImages/' + userId);
+    var mountainImagesRef = this.storageRef.child('profileImages/' + userId);
     mountainImagesRef.putString(file, 'data_url').then(snapshot => {
       snapshot.ref.getDownloadURL().then(downloadURL => {
         this.profilePicURL = downloadURL;
@@ -193,11 +190,10 @@ export class ProfilePage {
   }
 
   inserUserIDNumberPasswordImage(file, userId) {
-    var storageRef = firebase.storage().ref();
     var imageRef = this.storageRef.child('IDNumberPassport/' + userId);
     imageRef.put(file).then(snapshot => {
       this.user.uploadedIDNumberPassport = true;
-      this.showError('ID Number/ Passport image is changed successful.');
+      this.showError('ID Number/ Passport image is uploaded successful.');
       this.updateUser(false);
     });
   }

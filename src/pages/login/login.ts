@@ -92,7 +92,8 @@ export class LoginPage {
             {
                loader.dismiss();
                this.navCtrl.push(UploadPage, {
-                    userData: authData.uid
+                    userData: authData.uid,
+                    paymentReference: authData.paymentReference
                 });                
             }
 

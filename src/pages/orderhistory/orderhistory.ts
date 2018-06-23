@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ModalController } from 'ionic-angular';
 import * as firebase from 'firebase';
+import { OrderdetailsPage } from '../orderdetails/orderdetails';
 
 /**
  * Generated class for the OrderhistoryPage page.
@@ -18,17 +19,35 @@ export class OrderhistoryPage {
   public database: any;
   public historicOrders = [];
   public loading = true;
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public title = '';
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController) {
     this.uid = navParams.get('userData2');
+    this.title = navParams.get('status');
     this.database = firebase.database();
     var refForHistoricData = this.database.ref();
+    let status = this.title;
+    if(status == 'Order History')
+      status = 'Approved'    
+    if(status == '')
+      status = 'Awaiting Final Approval'
+
     refForHistoricData.child('orders').orderByChild('userId').equalTo(this.uid).on('value', (snapshot)=>{
-      var order = snapshot.val();
-           if(order != null)
-           {
+      var orders = snapshot.val();
+      this.historicOrders = [];
+           if(orders != null){
              snapshot.forEach(snap =>{
-                  this.historicOrders.push(snap.val());
-              });;
+               var order = snap.val();
+               order.key = snap.key;
+               if(status === "Awaiting Approval"){
+                  if(order.status == 'Awaiting Approval' || order.status == 'Awaiting Final Approval'){
+                    order.dateDisplay = this.timeConverter(order.createdDate);
+                    this.historicOrders.push(order);               
+                  }
+               }else if(order.status == status){
+                  order.dateDisplay = this.timeConverter(order.createdDate);
+                  this.historicOrders.push(order);
+                }
+              });
            }
            this.loading = false;
         });
@@ -38,4 +57,21 @@ export class OrderhistoryPage {
     console.log('ionViewDidLoad OrderhistoryPage');
   }
 
+  timeConverter(timestamp) {
+        var a = new Date(timestamp * 1000);
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var year = a.getFullYear();
+        var month = months[a.getMonth()];
+        var date = a.getDate();
+        var hour = a.getHours();
+        var min = a.getMinutes();
+        var sec = a.getSeconds();
+        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
+        return time;
+    }
+
+    viewOrderDetails(order){
+      let modal = this.modalCtrl.create(OrderdetailsPage,{order: order});
+      modal.present();
+    }
 }

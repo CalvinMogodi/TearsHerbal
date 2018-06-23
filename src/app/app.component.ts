@@ -24,6 +24,7 @@ export class MyApp {
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public events: Events) {
       events.subscribe("gotId", (uid)=>{
           this.id = uid;
+
       });
     this.initializeApp();  
     
@@ -41,18 +42,14 @@ export class MyApp {
                     this.profilePicURL = url;
                 });
             }
-          });
-        //that.rootPage = HomePage;
-        //this.nav.setRoot(LoginPage);
-        this.nav.setRoot(HomePage, {
-                    userData: user.uid
-                });
+          });       
       }
       else{
         that.rootPage = LoginPage;
         this.nav.setRoot(LoginPage);
       }
     })
+    that.rootPage = LoginPage;
     // used for an example of ngFor and navigation
     this.pages = [     
       { title: 'Home', component: HomePage, icon: 'home', isActive: false },
@@ -82,7 +79,7 @@ export class MyApp {
           firebase.auth().signOut();
       }
       this.nav.setRoot(page.component, {
-          profileId: this.userId
+          userData: this.userId
       });
     }
     

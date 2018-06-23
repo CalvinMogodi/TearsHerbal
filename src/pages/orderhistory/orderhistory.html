@@ -6,20 +6,20 @@
 -->
 <ion-header transparent>
   <ion-navbar transparent>
-    <ion-title>Order History</ion-title>
+    <ion-title>{{title}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding class="background">
-<ion-card style="border-radius: 15px">
-      <ion-card-content>        
-        <ion-spinner *ngIf="loading && historicOrders.length"></ion-spinner>
-        <ion-item-group *ngIf="historicOrders.length > 0">
-            <ion-item-divider *ngFor="let order of historicOrders" [value]="order.createdDate">order date:{{order.createdDate}} <br>quantity: {{order.quantity}}</ion-item-divider>
-        </ion-item-group>
-        <ion-item-group *ngIf="historicOrders.length == 0">
-            No Orders Found
-        </ion-item-group>
-      </ion-card-content>
-    </ion-card>
+      <ion-spinner *ngIf="loading"></ion-spinner>
+      <ion-list style="border-radius: 15px">
+        <ion-item *ngFor="let order of historicOrders" (click)="viewOrderDetails(order)">
+          <h4>Order Number: <b>{{order.orderNumber}}</b></h4>
+          <p>{{order.dateDisplay}}</p>
+          <ion-note item-end>Qty: {{order.quantity}}</ion-note>
+        </ion-item>
+        <ion-item style="text-align: center" *ngIf="!loading && historicOrders.length == 0">
+          <label>No Order(s) Found</label>
+        </ion-item>
+      </ion-list>
 </ion-content>

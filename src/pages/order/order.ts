@@ -19,31 +19,15 @@ import * as firebase from 'firebase';
 export class OrderPage {
   public uid: any;
   public database: any;
-  public availableStock: any;
   public loading = true;
   public loadingPrice = true;
   public loadingStock = true;
   public price = 0;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-    public modalCtrl: ModalController, public storage: Storage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController, public storage: Storage) {
     this.uid = navParams.get('userData2');
 
     this.database = firebase.database();
-
-    //get number of stock available
-    var refForAvailableStock = this.database.ref();
-    refForAvailableStock.child('manufactureData/avaliableStock').on('value', (snapshot) => {
-      var availableStock = snapshot.val();
-      if(availableStock == null || availableStock == undefined)
-        this.availableStock = 0;
-        else
-          this.availableStock = availableStock;
-      this.loadingStock = false;
-      if(!this.loadingPrice)
-        this.loading = false;
-    });
-
     let priceRef = firebase.database().ref('staticData/saPrice');
     priceRef.orderByValue().on("value", juicePrice => {
       var price = juicePrice.val();
@@ -69,7 +53,6 @@ export class OrderPage {
       {
         userData5: this.uid,
         price: this.price, 
-        availableStock: this.availableStock,
       });
     modal.present();
   }

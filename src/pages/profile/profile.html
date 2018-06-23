@@ -4,13 +4,13 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
-  <ion-navbar>
+<ion-header transparent>
+  <ion-navbar transparent>
     <ion-title>Profile</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content style="background-color: #edeaea" padding>
+<ion-content class="background" padding>
     <ion-card style="border-radius: 15px">
         <img src="{{profilePicURL}}" />
         <button (click)="openeditprofile()" ion-button full style="margin: 0px;border-radius: 0px 0px 15px 15px" >Change Your Profile Image</button>

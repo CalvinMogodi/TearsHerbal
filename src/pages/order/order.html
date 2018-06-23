@@ -29,8 +29,7 @@
           Teras Herbal Juice
           </ion-card-title>
         <p>
-          Healthy living and strong body
-          Available: {{availableStock}} <ion-spinner *ngIf="loading"></ion-spinner>
+          Healthy living and strong body.
         </p>
         <div style="text-align: center">
             <button [disabled]="availableStock <= 0" (click)="goToCart()" ion-button color="secondary" style="width:100%" round>Buy at {{price}}</button>           

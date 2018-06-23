@@ -16,6 +16,7 @@ import { ListPage } from '../pages/list/list';
 import { LoginPage } from '../pages/login/login';
 import { ForgotpasswordPage } from '../pages/forgotpassword/forgotpassword';
 import { TermsandconditionsPage } from '../pages/termsandconditions/termsandconditions';
+import { OrderdetailsPage } from '../pages/orderdetails/orderdetails';
 import { RegisterPage } from '../pages/register/register';
 import { UploadPage } from '../pages/upload/upload';
 import { OrderPage } from '../pages/order/order';
@@ -55,7 +56,8 @@ firebase.initializeApp(firebaseConfig);
     ForgotpasswordPage,
     TermsandconditionsPage,
     AwaitingApprovalPage,
-    OrderhistoryPage
+    OrderhistoryPage,
+    OrderdetailsPage
   ],
   imports: [
     BrowserModule,
@@ -81,7 +83,8 @@ firebase.initializeApp(firebaseConfig);
     ForgotpasswordPage,
     TermsandconditionsPage,
     AwaitingApprovalPage,
-    OrderhistoryPage
+    OrderhistoryPage,
+    OrderdetailsPage
   ],
   providers: [
     StatusBar,
@@ -95,7 +98,7 @@ firebase.initializeApp(firebaseConfig);
     Camera,
     Base64,
     File,
-    FilePath
+    FilePath,
   ]
 })
 export class AppModule {}

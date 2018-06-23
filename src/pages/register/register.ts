@@ -40,11 +40,13 @@ export class RegisterPage {
         isActive: false,
         points: 0,
         displayName: '',
+        country: 'South Africa',
         uploadedIDNumberPassport: false,
         uploadedProfileImage: false,
         uploadedPOP: false,
         createdDate: 0,
-        changedPassword: true
+        changedPassword: true,
+        paymentReference:''
     }
     selectImagePath = 'assets/imgs/ic_person_black.png';
     public step = 1;
@@ -132,9 +134,14 @@ var s = 0;
             loader.present();
             var timestamp = this.dateToTimestamp(new Date().toString());
             this.account.createdDate = timestamp;
-            this.account.displayName = this.account.name + ' ' + this.account.surname;
-            this.account.password = '',
-            this.account.confirmPassword = '',
+            this.account.displayName = this.account.name + ' ' + this.account.surname;           
+            let text = ''
+            var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+            let len = 7;
+            for (var i = 0; i < len; i++)
+                text += charset.charAt(Math.floor(Math.random() * charset.length));
+
+             this.account.paymentReference = text;
             this.userService.signUpUser(this.account).then(authData => {
                 loader.dismiss();
                 let toast = this.toastCtrl.create({
