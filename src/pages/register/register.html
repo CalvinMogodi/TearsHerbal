@@ -23,7 +23,7 @@
                 <ion-item>
                     <ion-label floating>Cell Phone</ion-label>
                     <ion-input [(ngModel)]="account.cellPhone" formControlName="cellPhone" [class.invalid]="!signUpFirstForm.controls.cellPhone.valid && (signUpFirstForm.controls.cellPhone.dirty || submitAttempt)"
-                        type="text"></ion-input>
+                        type="number"></ion-input>
                 </ion-item>
                 <ion-item>
                     <ion-label floating>Email</ion-label>
@@ -64,7 +64,7 @@
                 </ion-item>
                 <ion-item>
     <ion-label>Country</ion-label>
-    <ion-select [(ngModel)]="account.country">
+    <ion-select [(ngModel)]="account.country" formControlName="country">
       <ion-option value="Afghanistan +93">Afghanistan</ion-option>
       <ion-option value="Albania +355">Albania</ion-option>
       <ion-option value="Algeria +213">Algeria</ion-option>
@@ -122,6 +122,8 @@
             <ion-option value= "Cyprus +357">Cyprus </ion-option >
             <ion-option value= "Czech Republic +420">Czech Republic </ion-option >
             <ion-option value= "Democratic Republic of the Congo +243">Democratic Republic of the Congo </ion-option >
+            <ion-option value= "South Africa +27">South Africa </ion-option >
+            
     </ion-select>
   </ion-item>
                 <ion-item>

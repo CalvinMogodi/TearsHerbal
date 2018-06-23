@@ -35,13 +35,15 @@ export class MyApp {
           this.userId = user.uid;
           this.database.ref().child('users/' + user.uid).once('value', (snapshot)=>{
             var user = snapshot.val();
-            if(user.uploadedProfileImage){
+            if(user != null){
+              if(user.uploadedProfileImage){
               let storageRef = firebase.storage().ref();
               var starsRef = storageRef.child('profileImages' + user.uid);        
               starsRef.getDownloadURL().then( url => {
                     this.profilePicURL = url;
                 });
             }
+            }            
           });       
       }
       else{

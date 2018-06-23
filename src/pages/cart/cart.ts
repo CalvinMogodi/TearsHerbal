@@ -53,7 +53,7 @@ export class CartPage {
         deliveryMethod: '',
         deliveryAddress: '',
         paymentMethod: '',
-        quantity: 0,
+        quantity: 1,
         status: 'Pending Payment',
         userId: '',
         monthId: new Date().getMonth() + 1,
@@ -68,7 +68,8 @@ export class CartPage {
         cardNumber: '',
         expiryMonth: '',
         expiryYear: '',
-        cvv: ''
+        cvv: '',
+        quantity: 0
     };
 
     public database: any;
@@ -104,10 +105,11 @@ export class CartPage {
         endSearchString = endSearchString + today.getMonth() + 1 + '-';
         endSearchString = endSearchString + today.getFullYear();
 
-      /*  this.database.ref().child('orders').orderByChild('monthId')
+        this.database.ref().child('orders').orderByChild('monthId')
             .equalTo(today.getMonth() + 1).once('value', (snapshot) => {
                 snapshot.forEach(snap => {
                     var order = snap.val()
+                    order.createdDate = this.timeConverter(order.createdDate);
                     let date = new Date(this.timeConverter(order.createdDate));
                     let monthId = date.getMonth;
                     if (order.userId == this.userId
@@ -118,7 +120,7 @@ export class CartPage {
 
                 if (this.unitsBoughtThisMonth >= 5)
                     this.paymentMethods.push("Points");
-            });*/
+            });
 
         this.database.ref().child('users/' + this.userId).once('value', (snapshot) => {
             this.user = snapshot.val();
@@ -151,7 +153,7 @@ export class CartPage {
         var hour = a.getHours();
         var min = a.getMinutes();
         var sec = a.getSeconds();
-        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
+        var time = date + '-' + month + '-' + year;
         return time;
     }
 
@@ -346,6 +348,8 @@ export class CartPage {
         orderCountRef.orderByValue().once("value", total => {
         let newTotal = Number(total.val()) + 1;
         this.order.orderNumber = newTotal;
+        var timestamp = this.dateToTimestamp(new Date().toString());
+        this.order.createdDate = timestamp;
         newOrder.set(this.order, done => {
             //make payment
              this.updateOrderCount(this.order.orderNumber);
@@ -359,6 +363,8 @@ export class CartPage {
                     number: this.user.cellPhone,
                     reference: this.order.reference
                 });
+                
+                this.cardDetails.quantity = this.order.quantity;
 
             this.http.post('http://localhost/api/charge', JSON.stringify(this.cardDetails), options)
                 .subscribe(data => {
@@ -468,10 +474,11 @@ export class CartPage {
                         //proceed with payment
                         var newOrder = this.database.ref('orders').push();
                         let orderCountRef = firebase.database().ref('staticData/orderCount');
-                        orderCountRef.orderByValue().on("value", total => {
-                            let newTotal = Number(total) + 1;
+                        orderCountRef.orderByValue().once("value", total => {
+                            let newTotal = Number(total.val()) + 1;
                             this.order.orderNumber = newTotal;
-
+                              var timestamp = this.dateToTimestamp(new Date().toString());
+            this.order.createdDate = timestamp;
                             newOrder.set(this.order, done => {
                                 //update count
                                 this.updateOrderCount(this.order.orderNumber);

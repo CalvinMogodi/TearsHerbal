@@ -29,13 +29,13 @@ export class UserserviceProvider {
     return this.fireAuth.createUserWithEmailAndPassword(account['email'], account['password']).then((newUser) => {
       //
       
-      this.fireAuth.signInWithEmailAndPassword(account['email'], account['password']).then((authenticatedUser) => {
+      //this.fireAuth.signInWithEmailAndPassword(account['email'], account['password']).then((authenticatedUser) => {
         account['password'] = '';
         account['confirmPassword'] = '';
-        this.userProfile.child(authenticatedUser.uid).set(
+        this.userProfile.child(newUser.uid).set(
           account
         );
-      });
+     // });
     });
 
   }

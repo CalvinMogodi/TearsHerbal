@@ -17,7 +17,7 @@ export class RegisterPage {
     submitAttempt: boolean = false;
     secondSubmitAttempt: boolean = false;
     showError: boolean = false;
-    message: string;
+    message: string; 
     database: any;
     referredBy: any;
     peoples = [];
@@ -63,6 +63,7 @@ export class RegisterPage {
 
         this.signUpSecondForm = formBuilder.group({
             referredBy: ['', Validators.compose([Validators.required])],
+            country: ['South Africa', Validators.compose([Validators.required])],
             address: ['', Validators.compose([Validators.required])],
             accountNumber: ['', Validators.compose([Validators.required])],
             IDNumber: ['', Validators.compose([Validators.required])],

@@ -184,6 +184,8 @@ export class ProfilePage {
       snapshot.ref.getDownloadURL().then(downloadURL => {
         this.profilePicURL = downloadURL;
         this.showError('Profile image is changed successful.');
+        this.user.uploadedProfileImage = true;
+        this.updateUser(false);
       });
     });
 
