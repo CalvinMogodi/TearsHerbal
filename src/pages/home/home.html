@@ -26,14 +26,14 @@
         </ion-card-header>
         <ion-card-content style="float: right">
             <ion-spinner style="margin-left: -30px;margin-bottom: -19px;" *ngIf="loadingOrders"></ion-spinner>
-            <b>{{numOfOrders}}</b> Pending Payment<br>
-            <b>{{numOfOrders}}</b> Awaiting Approval<br>
+            <label (click)="viewOrders('Pending Payment')"> <b>{{numOfPendingPaymentOrders}}</b> Pending Payment</label><br>
+            <label (click)="viewOrders('Awiating Approvel')"><b>{{numOfAwiatingApprovelOrders}}</b> Awaiting Approval</label><br>
         </ion-card-content>
         <ion-row>
             <ion-col>
-                <button class="icon-btn" (click)="viewOrders()" ion-button icon-start clear small>
+                <button class="icon-btn" (click)="viewOrders('previous')" ion-button icon-start clear small>
                     <ion-icon name="basket"></ion-icon>                   
-                    <div style="margin-top: 5px;">View Orders</div>
+                    <div style="margin-top: 5px;">View Previous Orders</div>
                 </button>
             </ion-col>
         </ion-row>
@@ -49,7 +49,7 @@
             <ion-spinner style="margin-bottom: -5px;" *ngIf="loadingPoints"></ion-spinner> Available Points<br>
         </ion-card-content>
     </ion-card>
-    <ion-card style="text-align: center; border-radius: 5px">
+    <ion-card style="border-radius: 5px 45px 5px 5px;">
         <ion-card-header>
             <ion-icon name="people" color="primary"></ion-icon>
             My People
@@ -57,7 +57,7 @@
         <ion-card-content>
             <ion-spinner *ngIf="usersUnderMe.length <= 0 && loading"></ion-spinner>
             <ion-item-group *ngIf="usersUnderMe.length > 0">
-                <ion-item-divider *ngFor="let people of usersUnderMe" [value]="people.name">{{people.name + " " + people.surname}}</ion-item-divider>
+                <ion-item-divider *ngFor="let people of usersUnderMe" [value]="people.name"><ion-label>{{people.name + " " + people.surname}}</ion-label><ion-toggle disabled checked="people.isActive"></ion-toggle></ion-item-divider>
             </ion-item-group>
             <p *ngIf="usersUnderMe.length <= 0 && !loading">no users</p>
         </ion-card-content>

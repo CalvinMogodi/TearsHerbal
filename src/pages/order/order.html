@@ -30,11 +30,10 @@
           </ion-card-title>
         <p>
           Healthy living and strong body
-          Available: {{availableStock}}
+          Available: {{availableStock}} <ion-spinner *ngIf="loading"></ion-spinner>
         </p>
         <div style="text-align: center">
-            <button *ngIf="showButton" [disabled]="availableStock <= 0" (click)="goToCart()" ion-button color="secondary" style="width:100%" round>Buy at R450.00</button>
-            <ion-spinner *ngIf="!showButton"></ion-spinner>
+            <button [disabled]="availableStock <= 0" (click)="goToCart()" ion-button color="secondary" style="width:100%" round>Buy at {{price}}</button>           
         </div>
       </ion-card-content>
     </ion-card>    

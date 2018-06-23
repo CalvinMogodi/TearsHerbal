@@ -14,7 +14,8 @@ import * as firebase from 'firebase'
 export class HomePage {
   uid : any;
   public database: any;
-  public numOfOrders: any;
+  public numOfPendingPaymentOrders;
+  public numOfAwiatingApprovelOrders;
   public user: any;
   public points: any;
   public usersUnderMe = [];
@@ -46,18 +47,26 @@ export class HomePage {
     //get number of orders placed
     var refForOrders = this.database.ref();
     refForOrders.child('orders').orderByChild('userId').equalTo(this.uid).once('value', (snapshot)=>{
+        this.numOfPendingPaymentOrders = 0;
+        this.numOfAwiatingApprovelOrders = 0;
          var test = snapshot.val();
          if(test != null)
          {
             this.storage.set("id2", test);
-            let t = [];
             snapshot.forEach(snap =>{
-                t.push(snap.val());
+                let order = snap.val();
+               if(!order.uploadedPOP){
+                   this.numOfPendingPaymentOrders = this.numOfPendingPaymentOrders + 1;
+               }
+               else if(order.uploadedPOP){
+                   this.numOfAwiatingApprovelOrders = this.numOfAwiatingApprovelOrders + 1;
+               }
             });
-            this.numOfOrders = t.length;
          }
-         else
-            this.numOfOrders = 0;
+         else{
+             this.numOfPendingPaymentOrders = 0;
+             this.numOfAwiatingApprovelOrders = 0;
+         }           
          this.loadingOrders = false;
      });
      
@@ -97,10 +106,11 @@ export class HomePage {
     });
   }
 
-  public viewOrders()
+  public viewOrders(status)
   {
     this.navCtrl.push(OrderhistoryPage, {
-        userData2: this.uid
+        userData2: this.uid,
+        status: status,
     });
   }
 
