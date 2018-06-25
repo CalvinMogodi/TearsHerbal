@@ -23,7 +23,7 @@ export class HomePage {
     public loading = true;
     public loadingOrders = true;
     public loadingPoints = true;
-
+    public myCommision;
     constructor(private menuCtrl: MenuController, public userService: UserserviceProvider, public navCtrl: NavController, public navParams: NavParams, public storage: Storage, public events: Events) {
          this.menuCtrl.enable(true);
         this.uid = navParams.get('userData');
@@ -70,16 +70,22 @@ export class HomePage {
 
         //get people under user
         var refForUsers = this.database.ref();
-        refForUsers.child('users').orderByChild('referredBy').equalTo(this.uid).once('value', (snapshot) => {
+        refForUsers.child('users').orderByChild('referredBy').equalTo(this.uid).on('value', (snapshot) => {
             var test = snapshot.val();
+            this.usersUnderMe = [];
             if (test != null) {
                 this.storage.set("id2", test);
-                let t = [];
+                this.myCommision = 0;
                 snapshot.forEach(snap => {
-                    this.usersUnderMe.push(snap.val());
-
+                    let user = snap.val();
+                    if(user.isActive){
+                        if(!user.referrerIsPaid)
+                            this.myCommision += 200;
+                    }
+                    this.usersUnderMe.push(user);
+                    
                 });
-
+                this.myCommision = this.myCommision.toFixed(2);
                 this.loading = false;
             }
             else {

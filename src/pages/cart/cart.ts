@@ -44,7 +44,8 @@ export class CartPage {
 
     paymentMethods =
     [
-        "Deposit",
+        "Cash Deposit",
+        "EFT",
         "Card"
     ];
 
@@ -89,7 +90,7 @@ export class CartPage {
         this.userId = navParams.get('userData5');
         this.price = navParams.get('price');
         this.database = firebase.database();
-        var today = new Date();
+       /* var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth() + 1; //January is 0!
         var yyyy = today.getFullYear();
@@ -120,7 +121,7 @@ export class CartPage {
 
                 if (this.unitsBoughtThisMonth >= 5)
                     this.paymentMethods.push("Points");
-            });
+            });*/
 
         this.database.ref().child('users/' + this.userId).once('value', (snapshot) => {
             this.user = snapshot.val();
@@ -389,7 +390,7 @@ export class CartPage {
     placeOrder() {
         this.showSpinner = true;
         this.storage.set("id4", this.order);
-        if (this.order.paymentMethod == 'Deposit') {
+        if (this.order.paymentMethod != 'Card') {
             //generate reference
             var text = "";
             var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -431,7 +432,7 @@ export class CartPage {
                     this.database.ref().child('users/' + this.userId).once('value', (snapshot) => {
                         this.user = snapshot.val();
 
-                        this.user.points = this.user.points + (30 * this.order.quantity);
+                        this.user.points = this.user.points + (10 * this.order.quantity);
                         this.database.ref().child('users/' + this.userId)
                             .update(this.user);
 
@@ -457,7 +458,7 @@ export class CartPage {
             this.showPaymentForm = true;
             //this.setupStripe();
         }
-        else if (this.order.paymentMethod == 'Points') {
+       /* else if (this.order.paymentMethod == 'Points') {
 
             this.database.ref().child('users/' + this.userId)
                 .once('value', (snapshot) => {
@@ -525,7 +526,7 @@ export class CartPage {
                     }
                 });
 
-        }
+        }*/
 
     }
 

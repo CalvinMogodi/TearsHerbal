@@ -44,7 +44,9 @@ export class MyApp {
                 });
             }
             }            
-          });       
+          });
+          that.rootPage = HomePage;
+        this.nav.setRoot(HomePage,{userData: user.uid});       
       }
       else{
         that.rootPage = LoginPage;

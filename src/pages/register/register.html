@@ -144,7 +144,7 @@
                 <ion-item>
                     <ion-label floating>Account Number</ion-label>
                     <ion-input [(ngModel)]="account.accountNumber" formControlName="accountNumber" [class.invalid]="!signUpSecondForm.controls.accountNumber.valid && (signUpSecondForm.controls.accountNumber.dirty || secondSubmitAttempt)"
-                        type="text"></ion-input>
+                        type="number"></ion-input>
                 </ion-item>
                 <div padding>
                     <button ion-button block class="btn" (click)="signUp()">Sign Up</button>

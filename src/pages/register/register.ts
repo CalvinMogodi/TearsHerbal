@@ -46,7 +46,8 @@ export class RegisterPage {
         uploadedPOP: false,
         createdDate: 0,
         changedPassword: true,
-        paymentReference:''
+        paymentReference:'',
+        referrerIsPaid: false
     }
     selectImagePath = 'assets/imgs/ic_person_black.png';
     public step = 1;
