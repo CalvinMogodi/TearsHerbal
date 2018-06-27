@@ -109,7 +109,6 @@ export class UploadPage {
   inserUserPOPImage(file, userId) {
     var storageRef = firebase.storage().ref();
     var imageRef = storageRef.child('initiationFee/' + userId);
-    this.showError(userId);
     imageRef.put(file).then(snapshot => {
       this.showError('Proof of payment is uploaded successful.');
       this.updateUser();

@@ -61,7 +61,18 @@ export class CartPage {
         uploadedPOP: false,
         user: '',
         reference: '',
-        orderNumber: 0
+        orderNumber: 0,
+        waybillNumber: 0,
+        audit:{
+            pendingPaymentDone: false,
+            pendingPaymentDate: '',
+            awaitingApprovalDone: false,
+            awaitingApprovalDate: '',
+            readyForDeliveryDone: false,
+            readyForDeliveryDate: '',
+            collectedByCourierDone: false,
+            collectedByCourierDate: '',
+        }
     }
 
     public cardDetails =
@@ -90,6 +101,7 @@ export class CartPage {
         this.userId = navParams.get('userData5');
         this.price = navParams.get('price');
         this.database = firebase.database();
+         this.priceTotal = (1 * this.price).toFixed(2);
        /* var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth() + 1; //January is 0!
@@ -340,7 +352,8 @@ export class CartPage {
             text += charset.charAt(Math.floor(Math.random() * charset.length));
 
         this.order.reference = text;
-
+        this.order.audit.pendingPaymentDone = true;
+        this.order.audit.pendingPaymentDate = this.timeConverter(this.dateToTimestamp(new Date().toString()));
         var newOrder = this.database.ref('orders').push();
         this.order.user = this.user.name + " " + this.user.surname;
         this.order.reference = text;
@@ -456,7 +469,7 @@ export class CartPage {
         }
         else if (this.order.paymentMethod == 'Card') {
             this.showPaymentForm = true;
-            //this.setupStripe();
+            this.setupStripe();
         }
        /* else if (this.order.paymentMethod == 'Points') {
 

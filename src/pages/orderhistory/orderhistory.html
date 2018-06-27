@@ -12,14 +12,11 @@
 
 <ion-content padding class="background">
       <ion-spinner *ngIf="loading"></ion-spinner>
-      <ion-list style="border-radius: 15px">
-        <ion-item *ngFor="let order of historicOrders" (click)="viewOrderDetails(order)">
-          <h4>Order Number: <b>{{order.orderNumber}}</b></h4>
-          <p>{{order.dateDisplay}}</p>
-          <ion-note item-end>Qty: {{order.quantity}}</ion-note>
-        </ion-item>
-        <ion-item style="text-align: center" *ngIf="!loading && historicOrders.length == 0">
-          <label>No Order(s) Found</label>
-        </ion-item>
-      </ion-list>
+      <ion-card style="border-radius: 15px;" padding *ngFor="let order of historicOrders" (click)="viewOrderDetails(order)">  
+        <h4 class="maintext">Order Number: <b>{{order.orderNumber}}</b></h4>
+        <p class="maintext">{{order.dateDisplay}}</p>
+      <ion-note style="margin-right: -80%;">
+       Qty: {{order.quantity}}
+      </ion-note>
+      </ion-card>
 </ion-content>

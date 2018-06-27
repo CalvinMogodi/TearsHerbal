@@ -70,12 +70,13 @@ export class HomePage {
 
         //get people under user
         var refForUsers = this.database.ref();
+        this.myCommision = 0;
         refForUsers.child('users').orderByChild('referredBy').equalTo(this.uid).on('value', (snapshot) => {
             var test = snapshot.val();
             this.usersUnderMe = [];
             if (test != null) {
                 this.storage.set("id2", test);
-                this.myCommision = 0;
+                
                 snapshot.forEach(snap => {
                     let user = snap.val();
                     if(user.isActive){

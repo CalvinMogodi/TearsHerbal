@@ -42,6 +42,7 @@
                 </ion-item>
                 <div padding>
                     <button ion-button block class="btn" (click)="next()">Next</button>
+                    <p *ngIf="showPasswordError" style="color: red;font-size: xx-small;text-align: center;"> Passwords don't match</p>
                 </div>
             </ion-list>
         </form>
@@ -57,7 +58,7 @@
                             </ion-searchbar>
                             <ion-list>
                                 <ion-item style="background-color:#f8f8f8;" *ngFor="let person of peoples" (click)="addNote(person)">
-                                    <span style="color:seagreen">{{person.name}} {{person.surname}} - {{person.IDNumber}}</span>
+                                    <span style="color:seagreen">{{person.name}} {{person.surname}} - {{person.membershipNo}}</span>
                                 </ion-item>
                             </ion-list>
                     </div>
@@ -157,6 +158,3 @@
         </form>
     </ion-card>
 </ion-content>
-<ion-footer>
-    <p style="text-align: center">&#169;Copyright. All rights reserved</p>
-</ion-footer>

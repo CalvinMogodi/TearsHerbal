@@ -5,6 +5,7 @@ import { HomePage } from '../home/home';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import * as firebase from 'firebase'
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 @Component({
     selector: 'page-register',
@@ -20,6 +21,7 @@ export class RegisterPage {
     message: string; 
     database: any;
     referredBy: any;
+    showPasswordError = false;
     peoples = [];
 
     public account = {
@@ -47,7 +49,8 @@ export class RegisterPage {
         createdDate: 0,
         changedPassword: true,
         paymentReference:'',
-        referrerIsPaid: false
+        referrerIsPaid: false,
+        membershipNo: ''
     }
     selectImagePath = 'assets/imgs/ic_person_black.png';
     public step = 1;
@@ -61,6 +64,7 @@ export class RegisterPage {
             cellPhone: ['', Validators.compose([Validators.required])],
             confirmPassword: ['', Validators.compose([Validators.required])],
         });
+          this.database = firebase.database();
 
         this.signUpSecondForm = formBuilder.group({
             referredBy: ['', Validators.compose([Validators.required])],
@@ -74,6 +78,11 @@ export class RegisterPage {
 
     next() {
         this.submitAttempt = true;
+         if(this.account.password != this.account.confirmPassword)
+        {
+            this.showPasswordError = true;
+            return false;
+        }
         if (this.signUpFirstForm.valid) {
             this.step = 2;
         }
@@ -84,28 +93,28 @@ export class RegisterPage {
     }
 
     addFocus(){
-var s = 0;
+        return true;
     }
+    
     search(){
         let txt = this.referredBy.trim();
         if(txt.length > 2){
-             let usersRef = firebase.database().ref('users');
-           usersRef.orderByValue().startAt(txt).limitToFirst(5).once('value', snapshot => {
-               var dsd = 0;
-               this.peoples = [];
-                snapshot.forEach(snap=>
-                {
+        let usersRef = firebase.database().ref();
+        usersRef.child("users").orderByValue().startAt(txt).limitToFirst(5).once('value', snapshot => {
+            this.peoples = [];
+            snapshot.forEach(snap=>
+            {
                     var item = snap.val();
                     item.key = snap.key;
                     this.peoples.push(item);
                     return false;
                 });
-            });
+        });
         }
     }
 
     removeFocus(){
-        var s = 0;
+        return false;
     }
     
     addNote(item){
@@ -128,6 +137,7 @@ var s = 0;
         this.showError = false;
         this.message = '';
         this.secondSubmitAttempt = true;
+        this.showPasswordError = false;       
         if(this.signUpSecondForm.valid){
             var loader = this.loadingCtrl.create({
                 content: "Please wait..."
@@ -143,7 +153,16 @@ var s = 0;
             for (var i = 0; i < len; i++)
                 text += charset.charAt(Math.floor(Math.random() * charset.length));
 
-             this.account.paymentReference = text;
+            var charsetmn = "0123456789";
+            let lenmn = 3;
+            var str = '';
+            for (var i = 0; i < lenmn; i++)
+                 str += charsetmn.charAt(Math.floor(Math.random() * charsetmn.length));
+
+            var nameChar = this.account.name.substring(0,1).toUpperCase();
+            var surnameChar = this.account.surname.substring(0,1).toUpperCase();
+            this.account.membershipNo =  nameChar + surnameChar + new Date().getFullYear() + new Date().getMonth() + new Date().getDate() + str;
+            this.account.paymentReference = text;
             this.userService.signUpUser(this.account).then(authData => {
                 loader.dismiss();
                 let toast = this.toastCtrl.create({

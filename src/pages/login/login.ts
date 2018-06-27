@@ -21,6 +21,7 @@ export class LoginPage {
   loginForm: FormGroup;
   submitAttempt: boolean = false;
   showError: boolean = false;
+  dbUser: any;
   public user = {
     email: '',
     password: '',
@@ -67,6 +68,7 @@ export class LoginPage {
         this.database.ref('users/' + authData.uid).once('value', (snapshot) =>{
             //return snapshot.val() || 'Anoynymous';
             var user = snapshot.val();
+            this.dbUser = user;
             this.storage.set("id", authData.uid);
             this.userService.setUid(authData.uid);
             var test = this.userService.getUid();
@@ -93,7 +95,7 @@ export class LoginPage {
                loader.dismiss();
                this.navCtrl.push(UploadPage, {
                     userData: authData.uid,
-                    paymentReference: authData.paymentReference
+                    paymentReference: this.dbUser.paymentReference
                 });                
             }
 

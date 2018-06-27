@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Platform, ToastController, ViewController } from 'ionic-angular';
+import { NavController, NavParams, Platform, ToastController, ViewController, LoadingController} from 'ionic-angular';
 import { FilePath } from '@ionic-native/file-path';
 import { Base64 } from '@ionic-native/base64';
 import { FileChooser } from '@ionic-native/file-chooser';
@@ -21,7 +21,7 @@ export class OrderdetailsPage {
 public order: any;
 public dateStr = '';
 public storageRef: any;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public platform: Platform, private fileChooser: FileChooser, public iosFilePicker: IOSFilePicker, public toast: ToastController, private filePath: FilePath) {
+  constructor(public loadingCtrl: LoadingController,public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public platform: Platform, private fileChooser: FileChooser, public iosFilePicker: IOSFilePicker, public toast: ToastController, private filePath: FilePath) {
     this.order = navParams.get('order');
     this.dateStr = this.timeConverter(this.order.createdDate);
     this.storageRef = firebase.storage().ref();
@@ -104,28 +104,43 @@ public storageRef: any;
   showError(str) {
     let toast = this.toast.create({
       message: str,
-      duration: 10000,
+      duration: 3000,
       position: 'top'
     });
     toast.present();
   }
 
   inserUserPOPImage(file, orderId) {
+     var loader = this.loadingCtrl.create({
+        content: "Please wait..."
+      });
+
+      loader.present();
     this.order.uploadedPOP = true;
+    this.order.audit.pendingPaymentDone = true;
     var storageRef = firebase.storage().ref();
     var imageRef = this.storageRef.child('proofOfPayment/' + orderId);
     imageRef.put(file).then(snapshot => {
       this.showError('Proof of payment is saved successful.');
       this.updateUser();
+         loader.dismiss();
     });
   }
 
   updateUser(){
     var updates = {};
+    var date = this.timeConverter(this.dateToTimestamp(new Date().toString()));
     updates['orders/'+this.order.key+'/uploadedPOP/'] = true;
     updates['orders/'+this.order.key+'/status/'] = 'Awaiting Approval'; 
+    updates['orders/'+this.order.key+'/audit/pendingPaymentDone/'] = true;
+    updates['orders/'+this.order.key+'/audit/pendingPaymentDate/'] = date; 
     firebase.database().ref().update(updates);
   }
+
+  dateToTimestamp(strDate) {
+        var datum = Date.parse(strDate);
+        return datum / 1000;
+    }
 
    dismiss() {
     this.viewCtrl.dismiss();
