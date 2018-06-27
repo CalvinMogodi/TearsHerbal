@@ -63,6 +63,7 @@ export class CartPage {
         reference: '',
         orderNumber: 0,
         waybillNumber: 0,
+        cost: '',
         audit:{
             pendingPaymentDone: false,
             pendingPaymentDate: '',
@@ -352,6 +353,7 @@ export class CartPage {
             text += charset.charAt(Math.floor(Math.random() * charset.length));
 
         this.order.reference = text;
+        this.order.cost = this.priceTotal;
         this.order.audit.pendingPaymentDone = true;
         this.order.audit.pendingPaymentDate = this.timeConverter(this.dateToTimestamp(new Date().toString()));
         var newOrder = this.database.ref('orders').push();
@@ -417,6 +419,7 @@ export class CartPage {
             var newOrder = this.database.ref('orders').push();
             this.order.user = this.user.name + " " + this.user.surname;
             this.order.reference = text;
+            this.order.cost = this.priceTotal;
             var timestamp = this.dateToTimestamp(new Date().toString());
             this.order.createdDate = timestamp;
             let orderCountRef = firebase.database().ref('staticData/orderCount');
