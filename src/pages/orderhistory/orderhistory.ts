@@ -43,11 +43,14 @@ export class OrderhistoryPage {
                     order.dateDisplay = this.timeConverter(order.createdDate);
                     this.historicOrders.push(order);               
                   }
-               }else if(order.status == status){
+               }else{
                   order.dateDisplay = this.timeConverter(order.createdDate);
                   this.historicOrders.push(order);
                 }
               });
+              this.historicOrders.sort(function (a, b) {
+                  return b.orderNumber - a.orderNumber;
+              })
            }
            this.loading = false;
         });
