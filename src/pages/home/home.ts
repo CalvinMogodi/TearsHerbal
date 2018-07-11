@@ -6,6 +6,7 @@ import { LoginPage } from '../login/login';
 import { OrderhistoryPage } from '../orderhistory/orderhistory';
 import { UserserviceProvider } from '../../providers/userservice/userservice';
 import { Storage } from '@ionic/storage';
+import { CardpaymentPage } from '../cardpayment/cardpayment';
 import * as firebase from 'firebase'
 
 @Component({
@@ -45,7 +46,7 @@ export class HomePage {
 
         //get number of orders placed
         var refForOrders = this.database.ref();
-        refForOrders.child('orders').orderByChild('userId').equalTo(this.uid).on('value', (snapshot) => {
+        refForOrders.child('orders').orderByChild('userId').equalTo(this.uid).once('value', (snapshot) => {
             this.numOfPendingPaymentOrders = 0;
             this.numOfAwiatingApprovelOrders = 0;
             var test = snapshot.val();
@@ -103,9 +104,10 @@ export class HomePage {
     }
 
     public placeAnOrder() {
-        this.navCtrl.push(OrderPage, {
+        /*this.navCtrl.push(OrderPage, {
             userData2: this.uid
-        });
+        });*/
+         this.navCtrl.push(CardpaymentPage);
     }
 
     public viewOrders(status) {

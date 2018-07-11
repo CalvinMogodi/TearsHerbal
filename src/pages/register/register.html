@@ -10,9 +10,9 @@
     <ion-card *ngIf="step == 1" style="border-radius: 15px">
         <form [formGroup]="signUpFirstForm">
             <ion-list>
-                <ion-item>
+                <ion-item [class.invalid2]="!signUpFirstForm.controls.name.valid && (signUpFirstForm.controls.name.dirty || submitAttempt)">
                     <ion-label floating>Name</ion-label>
-                    <ion-input [(ngModel)]="account.name" formControlName="name" [class.invalid]="!signUpFirstForm.controls.name.valid && (signUpFirstForm.controls.name.dirty || submitAttempt)"
+                    <ion-input [(ngModel)]="account.name" formControlName="name" [class.invalid2]="!signUpFirstForm.controls.name.valid && (signUpFirstForm.controls.name.dirty || submitAttempt)"
                         type="text"></ion-input>
                 </ion-item>
                 <ion-item>
@@ -53,7 +53,7 @@
             <ion-list>
                 <ion-item>
                     <div class="autocomplete">
-                        <ion-searchbar [(ngModel)]="referredBy" formControlName="referredBy" (ionFocus)="addFocus()" (ionInput)="search()" (ionBlur)="removeFocus()"
+                        <ion-searchbar [(ngModel)]="referredBy" formControlName="referredBy" [class.invalid]="!signUpSecondForm.controls.referredBy.valid && (signUpSecondForm.controls.referredBy.dirty || secondSubmitAttempt)" (ionFocus)="addFocus()" (ionInput)="search()" (ionBlur)="removeFocus()"
                             debounce=500>
                             </ion-searchbar>
                             <ion-list>
@@ -63,7 +63,7 @@
                             </ion-list>
                     </div>
                 </ion-item>
-                <ion-item>
+               <!-- <ion-item>
     <ion-label>Country</ion-label>
     <ion-select [(ngModel)]="account.country" formControlName="country">
       <ion-option value="Afghanistan +93">Afghanistan</ion-option>
@@ -126,7 +126,7 @@
             <ion-option value= "South Africa +27">South Africa </ion-option >
             
     </ion-select>
-  </ion-item>
+  </ion-item>-->
                 <ion-item>
                     <ion-label floating>Address</ion-label>
                     <ion-input [(ngModel)]="account.address" formControlName="address" [class.invalid]="!signUpSecondForm.controls.address.valid && (signUpSecondForm.controls.address.dirty || secondSubmitAttempt)"

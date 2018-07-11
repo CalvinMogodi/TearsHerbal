@@ -15,15 +15,15 @@
       height: 30px;
     border-radius: 5px;
 }
+.invalid{
+    border-bottom: 2px solid #ea6153;
+}
 .login-links{
     font-size: smaller;
     font-weight: normal;
     color: #488aff;
 }
 
-.invalid {
-     border-bottom: 1px solid #ea6153;
-     }
 ion-input {
     border-bottom: 1px solid  #008000;
     }

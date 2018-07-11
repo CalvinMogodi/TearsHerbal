@@ -58,7 +58,7 @@ export class RegisterPage {
     constructor(public http: Http, private menuCtrl: MenuController, public userService: UserserviceProvider, public navCtrl: NavController, public formBuilder: FormBuilder, public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
         this.menuCtrl.enable(false);
         this.signUpFirstForm = formBuilder.group({
-            email: ['', Validators.compose([Validators.required])],
+            email: '',
             password: ['', Validators.compose([Validators.required])],
             name: ['', Validators.compose([Validators.required])],
             surname: ['', Validators.compose([Validators.required])],
@@ -133,6 +133,10 @@ export class RegisterPage {
     }
 
     signUp() {
+
+        if(this.account.email == undefined || this.account.email == ''){
+            this.account.email = this.account.cellPhone.trim() + 'terasherbaljuice.com';
+        }
         this.showError = false;
         this.message = '';
         this.secondSubmitAttempt = true;
@@ -163,8 +167,6 @@ export class RegisterPage {
             var surnameChar = this.account.surname.substring(0, 1).toUpperCase();
             this.account.membershipNo = nameChar + surnameChar + new Date().getFullYear() + new Date().getMonth() + new Date().getDate() + str;
             this.account.paymentReference = text;      
-            this.sendSMS();
-            /*      
             this.userService.signUpUser(this.account).then(authData => {
                 loader.dismiss();
                 let toast = this.toastCtrl.create({
@@ -173,13 +175,13 @@ export class RegisterPage {
                     position: 'bottom'
                 });
                 toast.present(toast);
-                this.sendSMS();
+               // this.sendSMS();
                 this.navCtrl.setRoot(LoginPage);
             }, error => {
                 loader.dismiss();
                 this.showError = true;
                 this.message = error;
-            })*/
+            })
 
         }
     }

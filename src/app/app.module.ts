@@ -24,6 +24,8 @@ import { OrderhistoryPage } from '../pages/orderhistory/orderhistory';
 import { CartPage } from '../pages/cart/cart';
 import { ProfilePage } from '../pages/profile/profile';
 import { AwaitingApprovalPage } from '../pages/awaitingapproval/awaitingapproval';
+import { CardpaymentPage } from '../pages/cardpayment/cardpayment';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 import * as firebase from 'firebase'
 import { StatusBar } from '@ionic-native/status-bar';
@@ -57,7 +59,8 @@ firebase.initializeApp(firebaseConfig);
     TermsandconditionsPage,
     AwaitingApprovalPage,
     OrderhistoryPage,
-    OrderdetailsPage
+    OrderdetailsPage,
+    CardpaymentPage
   ],
   imports: [
     BrowserModule,
@@ -84,7 +87,8 @@ firebase.initializeApp(firebaseConfig);
     TermsandconditionsPage,
     AwaitingApprovalPage,
     OrderhistoryPage,
-    OrderdetailsPage
+    OrderdetailsPage,
+    CardpaymentPage
   ],
   providers: [
     StatusBar,
@@ -99,6 +103,7 @@ firebase.initializeApp(firebaseConfig);
     Base64,
     File,
     FilePath,
+    InAppBrowser
   ]
 })
 export class AppModule {}

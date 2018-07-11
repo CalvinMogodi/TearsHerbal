@@ -22,6 +22,7 @@ export class LoginPage {
   submitAttempt: boolean = false;
   showError: boolean = false;
   dbUser: any;
+  loader: any;
   public user = {
     email: '',
     password: '',
@@ -54,16 +55,38 @@ export class LoginPage {
     this.navCtrl.push(TermsandconditionsPage);
   }
 
+  isANumber(str){
+    return !/\D/.test(str);
+  }
+
   signIn() {
     this.submitAttempt = true;
     if (this.loginForm.valid) {
-      var loader = this.loadingCtrl.create({
+      this.loader = this.loadingCtrl.create({
         content: "Please wait..."
       });
 
-      loader.present();
+      this.loader.present();
 
-      this.userService.loginUser(this.user.email, this.user.password).then(authData => {
+      if(this.isANumber(this.user.email)){
+        var refForOrders = this.database.ref();
+        refForOrders.child('users').orderByChild('cellPhone').equalTo(this.user.email).once('value', snapshot => {
+            var result = snapshot.val();
+            if(result != null){
+             snapshot.forEach(snap =>{
+              var user = snap.val();          
+                this.loginUser(user.email, this.user.password);             
+             });
+            }    
+        });         
+      }else{
+        this.loginUser(this.user.email, this.user.password);
+    }
+    }
+  }
+
+  loginUser(username, password){
+    this.userService.loginUser(username, password).then(authData => {
         //get data from db
         this.database.ref('users/' + authData.uid).once('value', (snapshot) =>{
             //return snapshot.val() || 'Anoynymous';
@@ -75,24 +98,20 @@ export class LoginPage {
             
             if(user.isActive)
             {
-                /*this.http.get('http://localhost/api/sms/send').map(res => res.json())
-                            .subscribe(data=>{
-                                
-                            });*/
-                loader.dismiss();
+                this.loader.dismiss();
                 this.navCtrl.setRoot(HomePage, {
                     userData: test
                 });
             }
             else if(user.uploadedPOP){
-              loader.dismiss();
+              this.loader.dismiss();
                 this.navCtrl.push(AwaitingApprovalPage, {
                     userData: authData.uid
                 });              
             }
             else
             {
-               loader.dismiss();
+               this.loader.dismiss();
                this.navCtrl.push(UploadPage, {
                     userData: authData.uid,
                     paymentReference: this.dbUser.paymentReference
@@ -102,10 +121,9 @@ export class LoginPage {
         });
 
       }, error => {
-        loader.dismiss();
+        this.loader.dismiss();
         this.showError = true;
       });
-    }
   }
 
 }
